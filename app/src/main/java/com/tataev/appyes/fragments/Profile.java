@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.tataev.appyes.Defaults;
 import com.tataev.appyes.R;
 
 /**
@@ -17,7 +19,7 @@ import com.tataev.appyes.R;
  * Use the {@link Profile#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Profile extends Fragment {
+public class Profile extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -26,6 +28,10 @@ public class Profile extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Button buttonReg;
+    private Button buttonEnter;
+    private Fragment fragment;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,13 +70,33 @@ public class Profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        //Initialize registration and login buttons
+        buttonReg = (Button)rootView.findViewById(R.id.buttonReg);
+        buttonEnter = (Button)rootView.findViewById(R.id.buttonEnter);
+
+        buttonReg.setOnClickListener(this);
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.buttonReg:
+                fragment = new Registration();
+                Defaults.replaceFragment(fragment, getActivity());
+                break;
+            case R.id.buttonEnter:
+                break;
+            default:
+                break;
         }
     }
 

@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Display launcher icon
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayShowHomeEnabled(true);
         ab.setIcon(R.drawable.ic_launcher_icon);
+        ab.setDisplayShowHomeEnabled(true);
         ab.setDisplayShowTitleEnabled(false);
 
         // Initialize Fragment with menu items
@@ -39,6 +39,21 @@ public class MainActivity extends AppCompatActivity {
             fTrans.addToBackStack(null);
             fTrans.commit();
         }
+
+        //Listen for changes in the back stack
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    public void onBackStackChanged() {
+                        int stackHeight = getSupportFragmentManager().getBackStackEntryCount();
+                        if (stackHeight > 1) { // if we have something on the stack (doesn't include the current shown fragment)
+                            getSupportActionBar().setHomeButtonEnabled(true);
+                            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                        } else {
+                            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                            getSupportActionBar().setHomeButtonEnabled(false);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -54,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                getSupportFragmentManager().popBackStack();
+                return true;
+            default:
+                break;
+        }
 
         //noinspection SimplifiableIfStatement
 
