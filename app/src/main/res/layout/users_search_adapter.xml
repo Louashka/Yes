@@ -18,9 +18,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinnerCountry"
         android:layout_below="@+id/region"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
-        android:entries="@array/country_array"/>
+        android:entries="@array/country_array"
+        style="@style/SpinnerAppTheme"/>
 
     <Spinner
         android:layout_width="wrap_content"
@@ -30,7 +31,8 @@
         android:layout_toRightOf="@+id/spinnerCountry"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
-        android:entries="@array/city_russia"/>
+        android:entries="@array/city_russia"
+        style="@style/SpinnerAppTheme"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/search_gender"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:orientation="horizontal">
 
         <RadioButton
@@ -59,7 +61,8 @@
             android:text="@string/any"
             android:id="@+id/radioButtonAny"
             android:textColor="@color/users_tabtext_search"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            style="@style/RadioButtonAppThemeBlack"/>
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -67,7 +70,8 @@
             android:text="@string/choose_male"
             android:id="@+id/radioButtonM"
             android:textColor="@color/users_tabtext_search"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            style="@style/RadioButtonAppThemeBlack"/>
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -75,7 +79,8 @@
             android:text="@string/choose_female"
             android:id="@+id/radioButtonF"
             android:textColor="@color/users_tabtext_search"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            style="@style/RadioButtonAppThemeBlack"/>
 
     </RadioGroup>
 
@@ -91,36 +96,48 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp" />
 
-    <Spinner
+    <LinearLayout
+        android:id="@+id/userAgeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/spinnerFrom"
-        android:layout_below="@+id/userAge"
-        android:entries="@array/user_age_from"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:orientation="horizontal"
+        android:layout_below="@+id/userAge">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="-"
-        android:id="@+id/textLine"
-        android:layout_below="@+id/userAge"
-        android:layout_toRightOf="@+id/spinnerFrom"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_vertical" />
+        <EditText
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextAgeFrom"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            style="@style/EditTextAppTheme"
+            android:hint="@string/from"
+            android:singleLine="true"
+            android:inputType="number" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinnerTo"
-        android:layout_below="@+id/userAge"
-        android:layout_toRightOf="@+id/textLine"
-        android:entries="@array/user_age_to"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text= "&#8212;"
+            android:id="@+id/textLine"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextAgeTo"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            style="@style/EditTextAppTheme"
+            android:hint="@string/to"
+            android:singleLine="true"
+            android:inputType="number" />
+
+    </LinearLayout>
+
 </RelativeLayout>

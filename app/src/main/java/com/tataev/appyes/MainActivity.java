@@ -71,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                getSupportFragmentManager().popBackStack();
+                Fragment fragment = new MenuItems();
+                Defaults.replaceFragment(fragment, this);
                 return true;
             default:
                 break;

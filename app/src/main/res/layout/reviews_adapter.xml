@@ -11,10 +11,12 @@
         android:text="New Text"
         android:id="@+id/reviewsUserName"
         android:drawableLeft="@drawable/reviews_user_icon"
+        android:drawablePadding="5dp"
         android:layout_marginTop="20dp"
         android:gravity="center_vertical"
-        android:background="@drawable/reviews_username_border"
-        android:textColor="@color/menu_text" />
+        android:textColor="@color/menu_text"
+        android:layout_marginLeft="20dp"
+        android:textSize="16sp" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -233,20 +235,22 @@
                 android:numStars="1"
                 android:stepSize="0.1"
                 android:isIndicator="true"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:visibility="invisible" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/like"
                 android:textColor="@color/profile_text"
+                android:drawableLeft="@drawable/appthemeblack_btn_radio_on_holo_light"
                 android:id="@+id/reviews_text_like"
                 android:layout_alignLeft="@id/noveltyRatingBar1"
                 android:layout_alignRight="@id/noveltyRatingBar1"
                 android:layout_alignTop="@id/noveltyRatingBar1"
                 android:layout_alignBottom="@id/noveltyRatingBar1"
-                android:gravity="center_vertical|center_horizontal"
-                android:textSize="10sp" />
+                android:gravity="center_vertical|left"
+                android:textSize="14sp" />
         </RelativeLayout>
 
         <TextView
@@ -281,20 +285,22 @@
                 android:numStars="1"
                 android:stepSize="0.1"
                 android:isIndicator="true"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:visibility="invisible" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/do_not_like"
                 android:textColor="@color/profile_text"
+                android:drawableLeft="@drawable/appthemeblack_btn_radio_on_holo_light"
                 android:id="@+id/reviews_text_not_like"
                 android:layout_alignLeft="@id/noveltyRatingBar2"
                 android:layout_alignRight="@id/noveltyRatingBar2"
                 android:layout_alignTop="@id/noveltyRatingBar2"
                 android:layout_alignBottom="@id/noveltyRatingBar2"
-                android:gravity="center_vertical|center_horizontal"
-                android:textSize="10sp" />
+                android:gravity="center_vertical|left"
+                android:textSize="14sp" />
         </RelativeLayout>
 
         <TextView
@@ -329,20 +335,22 @@
                 android:numStars="1"
                 android:stepSize="0.1"
                 android:isIndicator="true"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:visibility="invisible" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/do_not_know"
                 android:textColor="@color/profile_text"
+                android:drawableLeft="@drawable/appthemeblack_btn_radio_on_holo_light"
                 android:id="@+id/reviews_text_not_know"
                 android:layout_alignLeft="@id/noveltyRatingBar3"
                 android:layout_alignRight="@id/noveltyRatingBar3"
                 android:layout_alignTop="@id/noveltyRatingBar3"
                 android:layout_alignBottom="@id/noveltyRatingBar3"
-                android:gravity="center_vertical|center_horizontal"
-                android:textSize="10sp" />
+                android:gravity="center_vertical|left"
+                android:textSize="14sp" />
         </RelativeLayout>
 
         <TextView

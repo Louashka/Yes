@@ -166,6 +166,9 @@ public class Reviews extends Fragment implements View.OnClickListener{
                         textRating1.setText(draft.getObjectFirstValue() + "%");
                         textRating2.setText(draft.getObjectSecondValue() + "%");
                         textRating3.setText(draft.getObjectThirdValue() + "%");
+                        ratingBar1.setVisibility(View.VISIBLE);
+                        ratingBar2.setVisibility(View.VISIBLE);
+                        ratingBar3.setVisibility(View.VISIBLE);
                         ratingBar1.setRating((float)draft.getObjectFirstValue() / 100);
                         ratingBar2.setRating((float)draft.getObjectSecondValue() / 100);
                         ratingBar3.setRating((float)draft.getObjectThirdValue() / 100);
@@ -174,6 +177,9 @@ public class Reviews extends Fragment implements View.OnClickListener{
                         textRating1.setText(draft.getObjectFirstValue() + "%");
                         textRating2.setText(draft.getObjectSecondValue() + "%");
                         textRating3.setText(draft.getObjectThirdValue() + "%");
+                        ratingBar1.setVisibility(View.VISIBLE);
+                        ratingBar2.setVisibility(View.VISIBLE);
+                        ratingBar3.setVisibility(View.VISIBLE);
                         ratingBar1.setRating((float)draft.getObjectFirstValue() / 100);
                         ratingBar2.setRating((float)draft.getObjectSecondValue() / 100);
                         ratingBar3.setRating((float)draft.getObjectThirdValue() / 100);
@@ -182,6 +188,9 @@ public class Reviews extends Fragment implements View.OnClickListener{
                         textRating1.setText(draft.getObjectFirstValue() + "%");
                         textRating2.setText(draft.getObjectSecondValue() + "%");
                         textRating3.setText(draft.getObjectThirdValue() + "%");
+                        ratingBar1.setVisibility(View.VISIBLE);
+                        ratingBar2.setVisibility(View.VISIBLE);
+                        ratingBar3.setVisibility(View.VISIBLE);
                         ratingBar1.setRating((float)draft.getObjectFirstValue() / 100);
                         ratingBar2.setRating((float)draft.getObjectSecondValue() / 100);
                         ratingBar3.setRating((float)draft.getObjectThirdValue() / 100);

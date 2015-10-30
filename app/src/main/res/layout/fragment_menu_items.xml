@@ -1,6 +1,7 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:AppYes="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent" android:background="@color/main_background"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -8,25 +9,25 @@
     android:paddingRight="@dimen/activity_horizontal_margin" android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <android.support.v7.widget.SearchView
+    <SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/search_view_main"
         android:searchIcon="@drawable/ic_action_search"
         android:background="@drawable/search_border"
         AppYes:queryHint="@string/search_hint"
-        AppYes:voiceIcon="@drawable/ic_action_mic"
-        AppYes:divider="@null"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp" />
 
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:layout_margin="5dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:id="@+id/firstMenuRow">
 
         <TextView
             android:id="@+id/reviews_text"
@@ -67,13 +68,15 @@
             android:textColor="@color/menu_text"
             android:textSize="12sp" />
 
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:layout_margin="5dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:id="@+id/SecondMenuRow">
 
         <TextView
             android:id="@+id/users_text"
@@ -113,13 +116,15 @@
             android:textAllCaps="true"
             android:textColor="@color/menu_text"
             android:textSize="12sp" />
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:layout_margin="5dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:id="@+id/ThirdMenuRow">
 
         <TextView
             android:id="@+id/discuss_text"
@@ -159,6 +164,7 @@
             android:textAllCaps="true"
             android:textColor="@color/menu_text"
             android:textSize="12sp" />
-    </TableRow>
-</TableLayout>
+    </LinearLayout>
+
+</LinearLayout>
 
