@@ -59,10 +59,10 @@
     <string name="city">Город</string>
     <string name="name">Имя</string>
     <string name="surname">Фамилия</string>
-    <string name="login">Логин</string>
+    <string name="login">Логин или номер телефона</string>
     <string name="reg_password">Пароль (7 или более символов)</string>
     <string name="security">Защита</string>
-    <string name="repeat_pswd">Повторите пароль</string>
+    <string name="repeat_pswd">Подтвердите пароль</string>
     <string name="mail">Адрес эл. почты</string>
     <string name="show_history">Показать друзьям историю покупок</string>
     <string name="show_recomendations">Показать друзьям рекомендации товаров и услуг</string>

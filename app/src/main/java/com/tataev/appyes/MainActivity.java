@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
             fTrans = fragmentManager.beginTransaction();
             // Add Fragment MenuItems to content_frame
             fTrans.replace(R.id.content_frame, menuFrag);
-            fTrans.addToBackStack(null);
             fTrans.commit();
         }
 
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 new FragmentManager.OnBackStackChangedListener() {
                     public void onBackStackChanged() {
                         int stackHeight = getSupportFragmentManager().getBackStackEntryCount();
-                        if (stackHeight > 1) { // if we have something on the stack (doesn't include the current shown fragment)
+                        if (stackHeight > 0) { // if we have something on the stack (doesn't include the current shown fragment)
                             getSupportActionBar().setHomeButtonEnabled(true);
                             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                         } else {
@@ -71,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                Fragment fragment = new MenuItems();
-                Defaults.replaceFragment(fragment, this);
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                Fragment fragment = new MenuItems();
+//                Defaults.replaceFragment(fragment, this);
                 return true;
             default:
                 break;
