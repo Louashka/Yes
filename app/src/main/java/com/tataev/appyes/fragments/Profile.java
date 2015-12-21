@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.tataev.appyes.Defaults;
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 
 /**
@@ -71,6 +72,7 @@ public class Profile extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Профиль");
         //Initialize registration and login buttons
         buttonReg = (Button)rootView.findViewById(R.id.buttonReg);
         buttonEnter = (Button)rootView.findViewById(R.id.buttonEnter);

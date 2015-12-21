@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 
 /**
@@ -64,6 +65,7 @@ public class Registration extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Регистрация");
         return inflater.inflate(R.layout.fragment_registration, container, false);
     }
 

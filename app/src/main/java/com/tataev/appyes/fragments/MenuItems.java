@@ -1,16 +1,18 @@
 package com.tataev.appyes.fragments;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 
 /**
@@ -38,6 +40,7 @@ public class MenuItems extends Fragment implements View.OnClickListener {
     private TextView discuss_text;
     private TextView reservation_text;
     private TextView abProg_text;
+    private SearchView search_view_main;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -82,6 +85,7 @@ public class MenuItems extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_menu_items, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("");
         // Initialize menu buttons (TextViews)
         reviews_text = (TextView)rootView.findViewById(R.id.reviews_text);
         novelty_text = (TextView)rootView.findViewById(R.id.novelty_text);
@@ -92,6 +96,7 @@ public class MenuItems extends Fragment implements View.OnClickListener {
         discuss_text = (TextView)rootView.findViewById(R.id.discuss_text);
         reservation_text = (TextView)rootView.findViewById(R.id.reservation_text);
         abProg_text = (TextView)rootView.findViewById(R.id.abProg_text);
+        search_view_main = (SearchView)rootView.findViewById(R.id.search_view_main);
 
         // Set OnClickListener to menu TextViews
         reviews_text.setOnClickListener(this);
@@ -103,6 +108,7 @@ public class MenuItems extends Fragment implements View.OnClickListener {
         discuss_text.setOnClickListener(this);
         reservation_text.setOnClickListener(this);
         abProg_text.setOnClickListener(this);
+        search_view_main.setOnClickListener(this);
 
         return rootView;
     }
@@ -153,6 +159,9 @@ public class MenuItems extends Fragment implements View.OnClickListener {
             case R.id.abProg_text:
                 fragment = new AboutProgram();
                 replaceFragment(fragment);
+                break;
+            case R.id.search_view_main:
+                search_view_main.onActionViewExpanded();
                 break;
             default:
                 break;

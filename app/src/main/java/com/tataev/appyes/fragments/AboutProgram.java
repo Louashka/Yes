@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 
 /**
@@ -65,7 +66,9 @@ public class AboutProgram extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("О программе");
         return inflater.inflate(R.layout.fragment_about_program, container, false);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

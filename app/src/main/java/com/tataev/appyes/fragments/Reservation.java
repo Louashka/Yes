@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.tataev.appyes.Defaults;
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.adapters.ReservationAdapter;
 
@@ -35,6 +37,7 @@ public class Reservation extends Fragment implements View.OnClickListener{
     private TextView categories_reserv_tab;
     private Fragment fragment;
     private ListView listViewReserv;
+    private SearchView search_view_main;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -78,6 +81,7 @@ public class Reservation extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_reservation, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Бронирование");
         //Initialize tab menu icons
         menu_reserv_tab = (TextView)rootView.findViewById(R.id.menu_reserv_tab);
         nearby_reserv_tab = (TextView)rootView.findViewById(R.id.nearby_reserv_tab);
@@ -86,6 +90,7 @@ public class Reservation extends Fragment implements View.OnClickListener{
         reservation_reserv_tab = (TextView)rootView.findViewById(R.id.reservation_reserv_tab);
         categories_reserv_tab = (TextView)rootView.findViewById(R.id.categories_reserv_tab);
         listViewReserv = (ListView)rootView.findViewById(R.id.listViewReserv);
+        search_view_main = (SearchView)rootView.findViewById(R.id.searchViewReservation);
 
         // Set OnClickListener to menu icons
         menu_reserv_tab.setOnClickListener(this);
@@ -94,6 +99,7 @@ public class Reservation extends Fragment implements View.OnClickListener{
         favor_reserv_tab.setOnClickListener(this);
         reservation_reserv_tab.setOnClickListener(this);
         categories_reserv_tab.setOnClickListener(this);
+        search_view_main.setOnClickListener(this);
 
         listViewReserv.setAdapter(new ReservationAdapter(getActivity()));
 
@@ -133,6 +139,9 @@ public class Reservation extends Fragment implements View.OnClickListener{
             case R.id.categories_reserv_tab:
                 fragment = new Categories();
                 Defaults.replaceFragment(fragment, getActivity());
+                break;
+            case R.id.searchViewReservation:
+                search_view_main.onActionViewExpanded();
                 break;
             default:
                 break;

@@ -6,9 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.tataev.appyes.Defaults;
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 
 /**
@@ -32,6 +34,7 @@ public class Nearby extends Fragment implements View.OnClickListener{
     private TextView reservation_nearby_tab;
     private TextView categories_nearby_tab;
     private Fragment fragment;
+    private SearchView search_view_main;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -75,6 +78,7 @@ public class Nearby extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_nearby, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Рядом");
         //Initialize tab menu icons
         menu_nearby_tab = (TextView)rootView.findViewById(R.id.menu_nearby_tab);
         nearby_nearby_tab = (TextView)rootView.findViewById(R.id.nearby_nearby_tab);
@@ -82,6 +86,7 @@ public class Nearby extends Fragment implements View.OnClickListener{
         favor_nearby_tab = (TextView)rootView.findViewById(R.id.favor_nearby_tab);
         reservation_nearby_tab = (TextView)rootView.findViewById(R.id.reservation_nearby_tab);
         categories_nearby_tab = (TextView)rootView.findViewById(R.id.categories_nearby_tab);
+        search_view_main = (SearchView)rootView.findViewById(R.id.searchViewNearby);
 
         // Set OnClickListener to menu icons
         menu_nearby_tab.setOnClickListener(this);
@@ -90,6 +95,7 @@ public class Nearby extends Fragment implements View.OnClickListener{
         favor_nearby_tab.setOnClickListener(this);
         reservation_nearby_tab.setOnClickListener(this);
         categories_nearby_tab.setOnClickListener(this);
+        search_view_main.setOnClickListener(this);
 
         return rootView;
     }
@@ -127,6 +133,9 @@ public class Nearby extends Fragment implements View.OnClickListener{
             case R.id.categories_nearby_tab:
                 fragment = new Categories();
                 Defaults.replaceFragment(fragment, getActivity());
+                break;
+            case R.id.searchViewNearby:
+                search_view_main.onActionViewExpanded();
                 break;
             default:
                 break;

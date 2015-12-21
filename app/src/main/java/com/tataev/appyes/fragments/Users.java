@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.UsersList;
 import com.tataev.appyes.adapters.UsersAdapter;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
  * Use the {@link Users#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Users extends Fragment {
+public class Users extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -41,6 +43,7 @@ public class Users extends Fragment {
     private ArrayList<UsersList> usersList = new ArrayList<UsersList>();
     private Bitmap bitmap;
     private ImageView imageRequest;
+    private SearchView search_view_main;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -84,6 +87,7 @@ public class Users extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_users, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Пользователи");
         //Example data
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.users_logo_default);
         usersList.add(new UsersList(bitmap, "Khasbulat Designer", true));
@@ -96,6 +100,9 @@ public class Users extends Fragment {
         imageRequest = (ImageView)rootView.findViewById(R.id.imageRequest);
         exListView = (ExpandableListView) rootView.findViewById(R.id.exListView);
         listViewUsers = (ListView)rootView.findViewById(R.id.listViewUsers);
+
+        search_view_main = (SearchView)rootView.findViewById(R.id.searchViewUsers);
+        search_view_main.setOnClickListener(this);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -133,6 +140,17 @@ public class Users extends Fragment {
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.searchViewUsers:
+                search_view_main.onActionViewExpanded();
+                break;
+            default:
+                break;
         }
     }
 

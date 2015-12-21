@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.tataev.appyes.Defaults;
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.ReviewsObject;
 import com.tataev.appyes.adapters.ReviewsAdapter;
@@ -46,6 +48,7 @@ public class Reviews extends Fragment implements View.OnClickListener{
     private Bitmap imgDraft;
     private ArrayList<ReviewsObject> RODraft = new ArrayList<ReviewsObject>();
     private Fragment fragment;
+    private SearchView search_view_main;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -90,6 +93,7 @@ public class Reviews extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_reviews, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Отзывы");
         //Initialize tab menu icons
         menu_tab = (TextView)rootView.findViewById(R.id.menu_tab);
         nearby_tab = (TextView)rootView.findViewById(R.id.nearby_tab);
@@ -98,6 +102,7 @@ public class Reviews extends Fragment implements View.OnClickListener{
         reservation_tab = (TextView)rootView.findViewById(R.id.reservation_tab);
         categories_tab = (TextView)rootView.findViewById(R.id.categories_tab);
         listViewReviews = (ListView)rootView.findViewById(R.id.listViewReviews);
+        search_view_main = (SearchView)rootView.findViewById(R.id.searchViewReviews);
 
         // Set OnClickListener to menu icons
         menu_tab.setOnClickListener(this);
@@ -106,6 +111,7 @@ public class Reviews extends Fragment implements View.OnClickListener{
         favor_tab.setOnClickListener(this);
         reservation_tab.setOnClickListener(this);
         categories_tab.setOnClickListener(this);
+        search_view_main.setOnClickListener(this);
 
         //Example data
         objectFeaturesDraft.add("2 футболки по цене 1!");
@@ -237,6 +243,9 @@ public class Reviews extends Fragment implements View.OnClickListener{
             case R.id.categories_tab:
                 fragment = new Categories();
                 Defaults.replaceFragment(fragment, getActivity());
+                break;
+            case R.id.searchViewReviews:
+                search_view_main.onActionViewExpanded();
                 break;
             default:
                 break;

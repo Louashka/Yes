@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tataev.appyes.fragments.MenuItems;
+import com.tataev.appyes.fragments.Nearby;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setIcon(R.drawable.ic_launcher_icon);
         ab.setDisplayShowHomeEnabled(true);
-        ab.setDisplayShowTitleEnabled(false);
+        ab.setDisplayShowTitleEnabled(true);
 
         // Initialize Fragment with menu items
         menuFrag = new MenuItems();
@@ -69,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
+            case R.id.navigation:
+                menuFrag = new Nearby();
+                Defaults.replaceFragment(menuFrag, this);
+                break;
             case android.R.id.home:
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 //                Fragment fragment = new MenuItems();
@@ -82,4 +87,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

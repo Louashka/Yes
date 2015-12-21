@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.tataev.appyes.Defaults;
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.adapters.RatingAdapter;
 
@@ -36,6 +38,7 @@ public class Rating extends Fragment implements View.OnClickListener{
     private TextView categories_rating_tab;
     private Fragment fragment;
     private ListView listViewRating;
+    private SearchView search_view_main;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -79,6 +82,7 @@ public class Rating extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_rating, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Рейтинг");
         //Initialize tab menu icons
         menu_rating_tab = (TextView)rootView.findViewById(R.id.menu_rating_tab);
         nearby_rating_tab = (TextView)rootView.findViewById(R.id.nearby_rating_tab);
@@ -87,6 +91,7 @@ public class Rating extends Fragment implements View.OnClickListener{
         reservation_rating_tab = (TextView)rootView.findViewById(R.id.reservation_rating_tab);
         categories_rating_tab = (TextView)rootView.findViewById(R.id.categories_rating_tab);
         listViewRating = (ListView)rootView.findViewById(R.id.listViewRating);
+        search_view_main = (SearchView)rootView.findViewById(R.id.searchViewRating);
 
         // Set OnClickListener to menu icons
         menu_rating_tab.setOnClickListener(this);
@@ -95,6 +100,7 @@ public class Rating extends Fragment implements View.OnClickListener{
         favor_rating_tab.setOnClickListener(this);
         reservation_rating_tab.setOnClickListener(this);
         categories_rating_tab.setOnClickListener(this);
+        search_view_main.setOnClickListener(this);
 
         listViewRating.setAdapter(new RatingAdapter(getActivity()));
 
@@ -134,6 +140,9 @@ public class Rating extends Fragment implements View.OnClickListener{
             case R.id.categories_rating_tab:
                 fragment = new Categories();
                 Defaults.replaceFragment(fragment, getActivity());
+                break;
+            case R.id.searchViewRating:
+                search_view_main.onActionViewExpanded();
                 break;
             default:
                 break;

@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.tataev.appyes.Defaults;
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.adapters.DiscussionsAdapter;
 
@@ -40,6 +42,7 @@ public class Discussions extends Fragment implements View.OnClickListener{
     private TextView categories_discuss_tab;
     private Fragment fragment;
     private ListView listViewDiscuss;
+    private SearchView search_view_main;
     private List<String> discuss_draft = new ArrayList<String>();
 
     // TODO: Rename and change types of parameters
@@ -84,6 +87,7 @@ public class Discussions extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_discussions, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Обсуждения");
         //Initialize tab menu icons
         discuss_draft = Arrays.asList(this.getResources().getStringArray(R.array.discuss_draft));
         menu_discuss_tab = (TextView)rootView.findViewById(R.id.menu_discuss_tab);
@@ -93,6 +97,7 @@ public class Discussions extends Fragment implements View.OnClickListener{
         reservation_discuss_tab = (TextView)rootView.findViewById(R.id.reservation_discuss_tab);
         categories_discuss_tab = (TextView)rootView.findViewById(R.id.categories_discuss_tab);
         listViewDiscuss = (ListView)rootView.findViewById(R.id.listViewDiscuss);
+        search_view_main = (SearchView)rootView.findViewById(R.id.searchViewDiscussions);
 
         // Set OnClickListener to menu icons
         menu_discuss_tab.setOnClickListener(this);
@@ -101,6 +106,7 @@ public class Discussions extends Fragment implements View.OnClickListener{
         favor_discuss_tab.setOnClickListener(this);
         reservation_discuss_tab.setOnClickListener(this);
         categories_discuss_tab.setOnClickListener(this);
+        search_view_main.setOnClickListener(this);
 
         listViewDiscuss.setAdapter(new DiscussionsAdapter(getActivity(), discuss_draft));
 
@@ -140,6 +146,9 @@ public class Discussions extends Fragment implements View.OnClickListener{
             case R.id.categories_discuss_tab:
                 fragment = new Categories();
                 Defaults.replaceFragment(fragment, getActivity());
+                break;
+            case R.id.searchViewDiscussions:
+                search_view_main.onActionViewExpanded();
                 break;
             default:
                 break;

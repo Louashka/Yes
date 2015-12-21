@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.tataev.appyes.Defaults;
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 
 /**
@@ -33,6 +35,7 @@ public class Favourites extends Fragment implements View.OnClickListener{
     private TextView reservation_favor_tab;
     private TextView categories_favor_tab;
     private Fragment fragment;
+    private SearchView search_view_main;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -76,6 +79,7 @@ public class Favourites extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_favourites, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Избранное");
         //Initialize tab menu icons
         menu_favor_tab = (TextView)rootView.findViewById(R.id.menu_favor_tab);
         nearby_favor_tab = (TextView)rootView.findViewById(R.id.nearby_favor_tab);
@@ -83,6 +87,7 @@ public class Favourites extends Fragment implements View.OnClickListener{
         favor_favor_tab = (TextView)rootView.findViewById(R.id.favor_favor_tab);
         reservation_favor_tab = (TextView)rootView.findViewById(R.id.reservation_favor_tab);
         categories_favor_tab = (TextView)rootView.findViewById(R.id.categories_favor_tab);
+        search_view_main = (SearchView)rootView.findViewById(R.id.searchViewFavourites);
 
         // Set OnClickListener to menu icons
         menu_favor_tab.setOnClickListener(this);
@@ -91,6 +96,7 @@ public class Favourites extends Fragment implements View.OnClickListener{
         favor_favor_tab.setOnClickListener(this);
         reservation_favor_tab.setOnClickListener(this);
         categories_favor_tab.setOnClickListener(this);
+        search_view_main.setOnClickListener(this);
 
         return rootView;
     }
@@ -128,6 +134,9 @@ public class Favourites extends Fragment implements View.OnClickListener{
             case R.id.categories_favor_tab:
                 fragment = new Categories();
                 Defaults.replaceFragment(fragment, getActivity());
+                break;
+            case R.id.searchViewFavourites:
+                search_view_main.onActionViewExpanded();
                 break;
             default:
                 break;

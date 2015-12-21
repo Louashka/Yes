@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.tataev.appyes.Defaults;
+import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.adapters.NoveltyPageAdapter;
 import com.tataev.appyes.view.SlidingTabLayout;
@@ -36,6 +38,7 @@ public class Novelty extends Fragment implements View.OnClickListener{
     private TextView reservation_nov_tab;
     private TextView categories_nov_tab;
     private Fragment fragment;
+    private SearchView search_view_main;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -84,6 +87,7 @@ public class Novelty extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         CONTENT = getResources().getStringArray(R.array.categories_items);
         View rootView = inflater.inflate(R.layout.fragment_novelty, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Новинки");
         //Initialize tab menu icons
         menu_nov_tab = (TextView)rootView.findViewById(R.id.menu_nov_tab);
         nearby_nov_tab = (TextView)rootView.findViewById(R.id.nearby_nov_tab);
@@ -91,6 +95,7 @@ public class Novelty extends Fragment implements View.OnClickListener{
         favor_nov_tab = (TextView)rootView.findViewById(R.id.favor_nov_tab);
         reservation_nov_tab = (TextView)rootView.findViewById(R.id.reservation_nov_tab);
         categories_nov_tab = (TextView)rootView.findViewById(R.id.categories_nov_tab);
+        search_view_main = (SearchView)rootView.findViewById(R.id.searchViewNovelty);
 
         // Set OnClickListener to menu icons
         menu_nov_tab.setOnClickListener(this);
@@ -99,6 +104,7 @@ public class Novelty extends Fragment implements View.OnClickListener{
         favor_nov_tab.setOnClickListener(this);
         reservation_nov_tab.setOnClickListener(this);
         categories_nov_tab.setOnClickListener(this);
+        search_view_main.setOnClickListener(this);
 
         return rootView;
     }
@@ -158,6 +164,9 @@ public class Novelty extends Fragment implements View.OnClickListener{
             case R.id.categories_nov_tab:
                 fragment = new Categories();
                 Defaults.replaceFragment(fragment, getActivity());
+                break;
+            case R.id.searchViewNovelty:
+                search_view_main.onActionViewExpanded();
                 break;
             default:
                 break;
