@@ -1,11 +1,14 @@
 package com.tataev.appyes.adapters;
 
 import android.content.Context;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.EditText;
 
+import com.tataev.appyes.InputFilterMinMax;
 import com.tataev.appyes.R;
 
 /**
@@ -61,21 +64,34 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             convertView = l_InflaterUA.inflate(R.layout.list_group_adapter, null);
         }
-
         return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        ViewHolder holder;
         if (convertView == null) {
+            holder = new ViewHolder();
             convertView = l_InflaterUA.inflate(R.layout.users_search_adapter, null);
+            holder.editTextAgeFrom = (EditText)convertView.findViewById(R.id.editTextAgeFrom);
+            holder.editTextAgeTo = (EditText)convertView.findViewById(R.id.editTextAgeTo);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
+
+//        holder.editTextAgeFrom.setFilters(new InputFilter[]{ new InputFilterMinMax("12", "99")});
+//        holder.editTextAgeTo.setFilters(new InputFilter[]{ new InputFilterMinMax("12", "99")});
         return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
+    }
+
+    static class ViewHolder {
+        private EditText editTextAgeFrom;
+        private EditText editTextAgeTo;
     }
 
 }

@@ -21,7 +21,7 @@ public class NoveltyPageAdapter extends PagerAdapter {
     private String[] tabTitles;
     private LayoutInflater l_InflaterUA;
     private Context context;
-    private List<String> items = Arrays.asList("US $3.29", "US $2.59", "US $2.99", "US $2.36");
+    private List<String> items = Arrays.asList("   US $3.29", "   US $2.59", "   US $2.99", "   US $2.36");
 
     public NoveltyPageAdapter (Context context, String[] tabTitles){
         this.context = context;

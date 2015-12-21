@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         ab.setIcon(R.drawable.ic_launcher_icon);
         ab.setDisplayShowHomeEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setElevation(0);
 
         // Initialize Fragment with menu items
         menuFrag = new MenuItems();

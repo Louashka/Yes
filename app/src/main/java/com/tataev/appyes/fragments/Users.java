@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.UsersList;
@@ -103,6 +104,7 @@ public class Users extends Fragment implements View.OnClickListener{
 
         search_view_main = (SearchView)rootView.findViewById(R.id.searchViewUsers);
         search_view_main.setOnClickListener(this);
+        imageRequest.setOnClickListener(this);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -120,12 +122,6 @@ public class Users extends Fragment implements View.OnClickListener{
         usersAdapter = new UsersAdapter(getActivity(), usersList);
         listViewUsers.setAdapter(usersAdapter);
 
-        imageRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         return rootView;
     }
 
@@ -149,6 +145,9 @@ public class Users extends Fragment implements View.OnClickListener{
             case R.id.searchViewUsers:
                 search_view_main.onActionViewExpanded();
                 break;
+            case R.id.imageRequest:
+                Fragment fragment = new Requests();
+                Defaults.replaceFragment(fragment, getActivity());
             default:
                 break;
         }

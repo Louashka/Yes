@@ -83,9 +83,17 @@
 
     <string-array name="country_array">
         <item>Выберите страну</item>
-        <item>Россия</item>
-        <item>Украина</item>
+        <item>Азербайджан</item>
+        <item>Армения</item>
+        <item>Белоруссия</item>
         <item>Казахстан</item>
+        <item>Киргизия</item>
+        <item>Молдавия</item>
+        <item>Россия</item>
+        <item>Таджикистан</item>
+        <item>Туркмения</item>
+        <item>Узбекистан</item>
+        <item>Украина</item>
     </string-array>
 
     <string-array name="city_russia">

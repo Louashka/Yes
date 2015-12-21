@@ -62,7 +62,7 @@
             android:id="@+id/radioButtonAny"
             android:textColor="@color/users_tabtext_search"
             android:layout_weight="1"
-            style="@style/RadioButtonAppThemeBlack"/>
+            style="@style/RadioButtonAppThemeBlue"/>
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
             android:id="@+id/radioButtonM"
             android:textColor="@color/users_tabtext_search"
             android:layout_weight="1"
-            style="@style/RadioButtonAppThemeBlack"/>
+            style="@style/RadioButtonAppThemeBlue"/>
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
             android:id="@+id/radioButtonF"
             android:textColor="@color/users_tabtext_search"
             android:layout_weight="1"
-            style="@style/RadioButtonAppThemeBlack"/>
+            style="@style/RadioButtonAppThemeBlue"/>
 
     </RadioGroup>
 
@@ -120,7 +120,7 @@
             android:layout_height="wrap_content"
             android:text= "&#8212;"
             android:id="@+id/textLine"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
@@ -130,7 +130,7 @@
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:id="@+id/editTextAgeTo"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             style="@style/EditTextAppTheme"

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -103,6 +104,40 @@ public class Rating extends Fragment implements View.OnClickListener{
         search_view_main.setOnClickListener(this);
 
         listViewRating.setAdapter(new RatingAdapter(getActivity()));
+        listViewRating.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Fragment fragment;
+                switch (position){
+                    case 0:
+                        fragment = new ShopsRating();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    case 1:
+                        fragment = new BuyersRating();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    case 2:
+                        fragment = new ProductsRating();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    case 3:
+                        fragment = new ServicesRating();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    case 4:
+                        fragment = new CategoriesRating();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    case 5:
+                        fragment = new ObjectsRating();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
 
         return rootView;
     }

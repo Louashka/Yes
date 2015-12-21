@@ -11,11 +11,13 @@
         android:layout_height="wrap_content"
         android:text="US $3.29"
         android:layout_gravity="center"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
+        android:drawablePadding="10dp"
         android:drawableTop="@drawable/phone"
-        android:background="#ffffff"
+        android:background="@drawable/novelty_item_border"
         android:textColor="@color/actionbar_background"
-        android:drawablePadding="10dp"/>
+        android:paddingLeft="3dp"
+        android:paddingTop="3dp"
+        android:paddingRight="3dp"
+        android:paddingBottom="10dp" />
 
 </LinearLayout>

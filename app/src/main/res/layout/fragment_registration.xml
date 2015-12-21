@@ -2,12 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:fillViewport="true"
     tools:context="com.tataev.yes.Registration"
+    android:scrollbarSize="4dp"
+    android:scrollbarThumbVertical="@drawable/scrollbar_thumb"
     android:background="@drawable/registration_background">
 
     <LinearLayout

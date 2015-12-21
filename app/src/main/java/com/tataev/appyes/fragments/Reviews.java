@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
@@ -49,6 +50,8 @@ public class Reviews extends Fragment implements View.OnClickListener{
     private ArrayList<ReviewsObject> RODraft = new ArrayList<ReviewsObject>();
     private Fragment fragment;
     private SearchView search_view_main;
+    private Button buttonCreateReview;
+    private Button buttonReviewsHistory;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -103,6 +106,8 @@ public class Reviews extends Fragment implements View.OnClickListener{
         categories_tab = (TextView)rootView.findViewById(R.id.categories_tab);
         listViewReviews = (ListView)rootView.findViewById(R.id.listViewReviews);
         search_view_main = (SearchView)rootView.findViewById(R.id.searchViewReviews);
+        buttonCreateReview = (Button)rootView.findViewById(R.id.buttonCreateReview);
+        buttonReviewsHistory = (Button)rootView.findViewById(R.id.buttonReviewsHistory);
 
         // Set OnClickListener to menu icons
         menu_tab.setOnClickListener(this);
@@ -112,6 +117,8 @@ public class Reviews extends Fragment implements View.OnClickListener{
         reservation_tab.setOnClickListener(this);
         categories_tab.setOnClickListener(this);
         search_view_main.setOnClickListener(this);
+        buttonCreateReview.setOnClickListener(this);
+        buttonReviewsHistory.setOnClickListener(this);
 
         //Example data
         objectFeaturesDraft.add("2 футболки по цене 1!");
@@ -247,6 +254,13 @@ public class Reviews extends Fragment implements View.OnClickListener{
             case R.id.searchViewReviews:
                 search_view_main.onActionViewExpanded();
                 break;
+            case R.id.buttonReviewsHistory:
+                fragment = new ReviewsHistory();
+                Defaults.replaceFragment(fragment, getActivity());
+                break;
+            case R.id.buttonCreateReview:
+                fragment = new CreateInterview();
+                Defaults.replaceFragment(fragment, getActivity());
             default:
                 break;
         }

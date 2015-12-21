@@ -22,5 +22,6 @@
     <color name="rating_text_border">#b0b0b0</color>
     <color name="appthemeblack_color">#000000</color>
     <color name="reg_text_bg">#e2e6e8</color>
+    <color name="appthemeblue_color">#0064a4</color>
 
 </resources>

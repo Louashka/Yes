@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -102,6 +103,36 @@ public class Reservation extends Fragment implements View.OnClickListener{
         search_view_main.setOnClickListener(this);
 
         listViewReserv.setAdapter(new ReservationAdapter(getActivity()));
+        listViewReserv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Fragment fragment;
+                switch (position){
+                    case 0:
+                        fragment = new Bought();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    case 1:
+                        fragment = new Locked();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    case 2:
+                        fragment = new MyDesires();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    case 3:
+                        fragment = new PurchasesHistory();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    case 4:
+                        fragment = new GetDirection();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
 
         return rootView;
     }
