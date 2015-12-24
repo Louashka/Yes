@@ -1,5 +1,7 @@
 package com.tataev.appyes.fragments;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -86,6 +88,19 @@ public class MenuItems extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_menu_items, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("");
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) rootView.findViewById(R.id.search_view_main);
+        int id = searchView.getContext()
+                .getResources()
+                .getIdentifier("android:id/search_src_text", null, null);
+        TextView textView = (TextView) searchView.findViewById(id);
+        textView.setHintTextColor(getResources().getColor(R.color.menu_text));
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+
         // Initialize menu buttons (TextViews)
         reviews_text = (TextView)rootView.findViewById(R.id.reviews_text);
         novelty_text = (TextView)rootView.findViewById(R.id.novelty_text);

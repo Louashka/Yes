@@ -1,13 +1,17 @@
 package com.tataev.appyes;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.tataev.appyes.fragments.MenuItems;
 import com.tataev.appyes.fragments.Nearby;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         ab.setIcon(R.drawable.ic_launcher_icon);
         ab.setDisplayShowHomeEnabled(true);
         ab.setDisplayShowTitleEnabled(true);
+        ab.setHomeAsUpIndicator(R.drawable.ic_action_home_row);
         getSupportActionBar().setElevation(0);
 
         // Initialize Fragment with menu items
