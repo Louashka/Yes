@@ -55,8 +55,6 @@ so manually move them:
 * doc\serialized-form.html
 * doc\stylesheet.css
 * proguard-project.txt
-* src\
-* src\dummy.txt
 
 Moved Files:
 ------------
@@ -64,9 +62,12 @@ Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
 * AndroidManifest.xml => yandexmapkitlibrary\src\main\AndroidManifest.xml
+* assets\ => yandexmapkitlibrary\src\main\assets
 * libs\armeabi\libcache_local.so => yandexmapkitlibrary\src\main\jniLibs\armeabi\libcache_local.so
 * libs\classes.jar => yandexmapkitlibrary\libs\classes.jar
 * res\ => yandexmapkitlibrary\src\main\res\
+* src\ => yandexmapkitlibrary\src\main\java
+* src\dummy.txt => yandexmapkitlibrary\src\main\resources\dummy.txt
 
 Next Steps:
 -----------

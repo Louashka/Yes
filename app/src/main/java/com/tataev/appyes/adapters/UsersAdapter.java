@@ -55,7 +55,7 @@ public class UsersAdapter extends BaseAdapter {
             holder.imageUsersAva = (ImageView)convertView.findViewById(R.id.imageUsersAva);
             holder.usersName = (TextView)convertView.findViewById(R.id.usersName);
             holder.usersStatus = (RadioButton)convertView.findViewById(R.id.usersStatus);
-            roundedImage = new RoundImage(usersList.get(position).getUserBitmap());
+            roundedImage = new RoundImage(usersList.get(position).getUserBitmap(), 180, 180);
             convertView.setTag(holder);
         }
         else {

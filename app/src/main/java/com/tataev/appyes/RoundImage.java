@@ -21,9 +21,9 @@ public class RoundImage extends Drawable {
     private final int mBitmapWidth;
     private final int mBitmapHeight;
 
-    public RoundImage(Bitmap bitmap) {
+    public RoundImage(Bitmap bitmap, int width, int height) {
         //Make image round
-        mBitmap = Bitmap.createScaledBitmap(bitmap, 180, 180, false);
+        mBitmap = Bitmap.createScaledBitmap(bitmap, width, width, false);
         mRectF = new RectF();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
