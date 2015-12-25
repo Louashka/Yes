@@ -83,6 +83,9 @@ public class Reservation extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_reservation, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Бронирование");
+
+        Defaults.setSearchViewStyle(R.id.searchViewReservation, rootView, getActivity());
+
         //Initialize tab menu icons
         menu_reserv_tab = (TextView)rootView.findViewById(R.id.menu_reserv_tab);
         nearby_reserv_tab = (TextView)rootView.findViewById(R.id.nearby_reserv_tab);

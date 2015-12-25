@@ -73,6 +73,7 @@ public class Profile extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Профиль");
+
         //Initialize registration and login buttons
         buttonReg = (Button)rootView.findViewById(R.id.buttonReg);
         buttonEnter = (Button)rootView.findViewById(R.id.buttonEnter);

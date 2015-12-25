@@ -79,6 +79,9 @@ public class Categories extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_categories, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Категории");
+
+        Defaults.setSearchViewStyle(R.id.searchViewCategories, rootView, getActivity());
+
         //Initialize tab menu icons
         menu_categ_tab = (TextView)rootView.findViewById(R.id.menu_categ_tab);
         nearby_categ_tab = (TextView)rootView.findViewById(R.id.nearby_categ_tab);

@@ -1,9 +1,13 @@
 package com.tataev.appyes.fragments;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +19,6 @@ import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.adapters.NoveltyPageAdapter;
-import com.tataev.appyes.view.SlidingTabLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +48,6 @@ public class Novelty extends Fragment implements View.OnClickListener{
     private String mParam2;
 
     private String[] CONTENT;
-    private SlidingTabLayout slidingTabLayout;
     private ViewPager pager;
 
     private OnFragmentInteractionListener mListener;
@@ -88,6 +90,9 @@ public class Novelty extends Fragment implements View.OnClickListener{
         CONTENT = getResources().getStringArray(R.array.categories_items);
         View rootView = inflater.inflate(R.layout.fragment_novelty, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Новинки");
+
+        Defaults.setSearchViewStyle(R.id.searchViewNovelty, rootView, getActivity());
+
         //Initialize tab menu icons
         menu_nov_tab = (TextView)rootView.findViewById(R.id.menu_nov_tab);
         nearby_nov_tab = (TextView)rootView.findViewById(R.id.nearby_nov_tab);
@@ -96,6 +101,10 @@ public class Novelty extends Fragment implements View.OnClickListener{
         reservation_nov_tab = (TextView)rootView.findViewById(R.id.reservation_nov_tab);
         categories_nov_tab = (TextView)rootView.findViewById(R.id.categories_nov_tab);
         search_view_main = (SearchView)rootView.findViewById(R.id.searchViewNovelty);
+
+        PagerTabStrip pagerTabStrip = (PagerTabStrip) rootView.findViewById(R.id.pager_tab_strip);
+        pagerTabStrip.setTabIndicatorColor(getActivity().getResources().getColor(R.color.actionbar_background));
+        pagerTabStrip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 
         // Set OnClickListener to menu icons
         menu_nov_tab.setOnClickListener(this);
@@ -121,21 +130,6 @@ public class Novelty extends Fragment implements View.OnClickListener{
         pager = (ViewPager)view.findViewById(R.id.pager);
         pager.setAdapter(new NoveltyPageAdapter(getActivity(), CONTENT));
 
-        slidingTabLayout = (SlidingTabLayout)view.findViewById(R.id.sliding_tabs);
-        slidingTabLayout.setViewPager(pager);
-
-        slidingTabLayout.setScrollBarSize(4);
-        slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.actionbar_background);
-            }
-
-            @Override
-            public int getDividerColor(int position) {
-                return getResources().getColor(R.color.menu_tabs_line);
-            }
-        });
     }
 
     @Override

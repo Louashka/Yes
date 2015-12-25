@@ -31,7 +31,6 @@
         android:layout_toRightOf="@+id/spinnerCountry"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
-        android:entries="@array/city_russia"
         style="@style/SpinnerAppTheme"/>
 
     <TextView

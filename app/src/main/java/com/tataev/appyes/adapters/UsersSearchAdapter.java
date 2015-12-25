@@ -5,8 +5,11 @@ import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.tataev.appyes.InputFilterMinMax;
 import com.tataev.appyes.R;
@@ -69,18 +72,31 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = l_InflaterUA.inflate(R.layout.users_search_adapter, null);
             holder.editTextAgeFrom = (EditText)convertView.findViewById(R.id.editTextAgeFrom);
             holder.editTextAgeTo = (EditText)convertView.findViewById(R.id.editTextAgeTo);
+            holder.spinnerCountry = (Spinner)convertView.findViewById(R.id.spinnerCountry);
+            holder.spinnerCity = (Spinner)convertView.findViewById(R.id.spinnerCity);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
 //        holder.editTextAgeFrom.setFilters(new InputFilter[]{ new InputFilterMinMax("12", "99")});
 //        holder.editTextAgeTo.setFilters(new InputFilter[]{ new InputFilterMinMax("12", "99")});
+        holder.spinnerCountry.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 1:
+                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+                                R.array.city_russia, android.R.layout.simple_spinner_item);
+                        holder.spinnerCity.setAdapter(adapter);
+                }
+            }
+        });
         return convertView;
     }
 
@@ -92,6 +108,8 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
     static class ViewHolder {
         private EditText editTextAgeFrom;
         private EditText editTextAgeTo;
+        private Spinner spinnerCountry;
+        private Spinner spinnerCity;
     }
 
 }

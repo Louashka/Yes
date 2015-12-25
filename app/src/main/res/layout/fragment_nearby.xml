@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/searchViewNearby"
-        android:searchIcon="@drawable/ic_action_search"
+        android:searchIcon="@drawable/ic_search"
+        android:voiceIcon="@drawable/ic_search_mic"
         android:background="@drawable/view_border"
         android:layout_margin="5dp" />
 
@@ -140,5 +141,11 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/menu_tabs_line" />
+
+    <ru.yandex.yandexmapkit.MapView
+        android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:apiKey="MZ~g--N64OaceS3L2IWJ2KTyN0VWz9SUUfq69ShaKntxlT6pGajn3SN9UCTFH32LKzXGfW7ynnVRFxBmNz5DRtSFckc22bqTy7cQ4fStv4E=" />
 
 </LinearLayout>

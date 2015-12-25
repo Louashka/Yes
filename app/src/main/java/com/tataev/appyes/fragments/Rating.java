@@ -84,6 +84,9 @@ public class Rating extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_rating, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Рейтинг");
+
+        Defaults.setSearchViewStyle(R.id.searchViewRating, rootView, getActivity());
+
         //Initialize tab menu icons
         menu_rating_tab = (TextView)rootView.findViewById(R.id.menu_rating_tab);
         nearby_rating_tab = (TextView)rootView.findViewById(R.id.nearby_rating_tab);

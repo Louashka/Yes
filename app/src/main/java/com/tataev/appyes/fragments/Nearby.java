@@ -13,6 +13,9 @@ import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 
+import ru.yandex.yandexmapkit.MapController;
+import ru.yandex.yandexmapkit.MapView;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -79,6 +82,9 @@ public class Nearby extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_nearby, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Рядом");
+
+        Defaults.setSearchViewStyle(R.id.searchViewNearby, rootView, getActivity());
+
         //Initialize tab menu icons
         menu_nearby_tab = (TextView)rootView.findViewById(R.id.menu_nearby_tab);
         nearby_nearby_tab = (TextView)rootView.findViewById(R.id.nearby_nearby_tab);
@@ -87,6 +93,10 @@ public class Nearby extends Fragment implements View.OnClickListener{
         reservation_nearby_tab = (TextView)rootView.findViewById(R.id.reservation_nearby_tab);
         categories_nearby_tab = (TextView)rootView.findViewById(R.id.categories_nearby_tab);
         search_view_main = (SearchView)rootView.findViewById(R.id.searchViewNearby);
+
+        final MapView mMapView = (MapView) rootView.findViewById(R.id.map);
+        // Получаем MapController
+        MapController mMapController = mMapView.getMapController();
 
         // Set OnClickListener to menu icons
         menu_nearby_tab.setOnClickListener(this);

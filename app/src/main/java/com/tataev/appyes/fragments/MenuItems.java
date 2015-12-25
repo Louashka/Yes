@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 
@@ -89,17 +90,7 @@ public class MenuItems extends Fragment implements View.OnClickListener {
         View rootView = inflater.inflate(R.layout.fragment_menu_items, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("");
 
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) rootView.findViewById(R.id.search_view_main);
-        int id = searchView.getContext()
-                .getResources()
-                .getIdentifier("android:id/search_src_text", null, null);
-        TextView textView = (TextView) searchView.findViewById(id);
-        textView.setHintTextColor(getResources().getColor(R.color.menu_text));
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        Defaults.setSearchViewStyle(R.id.search_view_main, rootView, getActivity());
 
         // Initialize menu buttons (TextViews)
         reviews_text = (TextView)rootView.findViewById(R.id.reviews_text);

@@ -88,6 +88,9 @@ public class Discussions extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_discussions, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Обсуждения");
+
+        Defaults.setSearchViewStyle(R.id.searchViewDiscussions, rootView, getActivity());
+
         //Initialize tab menu icons
         discuss_draft = Arrays.asList(this.getResources().getStringArray(R.array.discuss_draft));
         menu_discuss_tab = (TextView)rootView.findViewById(R.id.menu_discuss_tab);

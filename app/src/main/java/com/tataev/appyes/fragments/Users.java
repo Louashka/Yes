@@ -89,6 +89,9 @@ public class Users extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_users, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Пользователи");
+
+        Defaults.setSearchViewStyle(R.id.searchViewUsers, rootView, getActivity());
+
         //Example data
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.users_logo_default);
         usersList.add(new UsersList(bitmap, "Khasbulat Designer", true));

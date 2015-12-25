@@ -97,6 +97,9 @@ public class Reviews extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_reviews, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Отзывы");
+
+        Defaults.setSearchViewStyle(R.id.searchViewReviews, rootView, getActivity());
+
         //Initialize tab menu icons
         menu_tab = (TextView)rootView.findViewById(R.id.menu_tab);
         nearby_tab = (TextView)rootView.findViewById(R.id.nearby_tab);

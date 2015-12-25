@@ -80,6 +80,9 @@ public class Favourites extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_favourites, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Избранное");
+
+        Defaults.setSearchViewStyle(R.id.searchViewFavourites, rootView, getActivity());
+
         //Initialize tab menu icons
         menu_favor_tab = (TextView)rootView.findViewById(R.id.menu_favor_tab);
         nearby_favor_tab = (TextView)rootView.findViewById(R.id.nearby_favor_tab);
