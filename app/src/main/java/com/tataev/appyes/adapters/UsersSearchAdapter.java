@@ -80,23 +80,75 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
             holder.editTextAgeTo = (EditText)convertView.findViewById(R.id.editTextAgeTo);
             holder.spinnerCountry = (Spinner)convertView.findViewById(R.id.spinnerCountry);
             holder.spinnerCity = (Spinner)convertView.findViewById(R.id.spinnerCity);
+            convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-//        holder.editTextAgeFrom.setFilters(new InputFilter[]{ new InputFilterMinMax("12", "99")});
-//        holder.editTextAgeTo.setFilters(new InputFilter[]{ new InputFilterMinMax("12", "99")});
-        holder.spinnerCountry.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        holder.spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_default, android.R.layout.simple_spinner_item));
+                        break;
                     case 1:
-                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
-                                R.array.city_russia, android.R.layout.simple_spinner_item);
-                        holder.spinnerCity.setAdapter(adapter);
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_azerbaijan, android.R.layout.simple_spinner_item));
+                        break;
+                    case 2:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_armenia, android.R.layout.simple_spinner_item));
+                        break;
+                    case 3:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_byelorussia, android.R.layout.simple_spinner_item));
+                        break;
+                    case 4:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_kazakhstan, android.R.layout.simple_spinner_item));
+                        break;
+                    case 5:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_kyrgyzstan, android.R.layout.simple_spinner_item));
+                        break;
+                    case 6:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_moldavia, android.R.layout.simple_spinner_item));
+                        break;
+                    case 7:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_russia, android.R.layout.simple_spinner_item));
+                        break;
+                    case 8:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_tajikistan, android.R.layout.simple_spinner_item));
+                        break;
+                    case 9:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_turkmenistan, android.R.layout.simple_spinner_item));
+                        break;
+                    case 10:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_uzbekistan, android.R.layout.simple_spinner_item));
+                        break;
+                    case 11:
+                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                                R.array.city_ukraine, android.R.layout.simple_spinner_item));
+                        break;
                 }
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                        R.array.city_default, android.R.layout.simple_spinner_item));
+            }
         });
+//        holder.editTextAgeFrom.setFilters(new InputFilter[]{new InputFilterMinMax("12", "99")});
+//        holder.editTextAgeTo.setFilters(new InputFilter[]{new InputFilterMinMax("12", "99")});
+
         return convertView;
     }
 
