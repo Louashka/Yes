@@ -9,10 +9,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
-import com.tataev.appyes.InputFilterMinMax;
 import com.tataev.appyes.R;
+import com.tataev.appyes.UserGlobalClass;
 
 /**
  * Created by louas_000 on 10.10.2015.
@@ -21,10 +22,27 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private LayoutInflater l_InflaterUA;
+    private UserGlobalClass userGlobalClass;
+    private int k = 0;
+    private int Countries[] = new int[]{
+            R.array.city_default,
+            R.array.city_armenia,
+            R.array.city_azerbaijan,
+            R.array.city_byelorussia,
+            R.array.city_kazakhstan,
+            R.array.city_kyrgyzstan,
+            R.array.city_moldavia,
+            R.array.city_russia,
+            R.array.city_tajikistan,
+            R.array.city_turkmenistan,
+            R.array.city_ukraine,
+            R.array.city_uzbekistan
+    };
 
     public UsersSearchAdapter (Context context){
         this.context = context;
         l_InflaterUA = LayoutInflater.from(context);
+        userGlobalClass = (UserGlobalClass)context.getApplicationContext();
     }
 
     @Override
@@ -80,63 +98,32 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
             holder.editTextAgeTo = (EditText)convertView.findViewById(R.id.editTextAgeTo);
             holder.spinnerCountry = (Spinner)convertView.findViewById(R.id.spinnerCountry);
             holder.spinnerCity = (Spinner)convertView.findViewById(R.id.spinnerCity);
+            holder.userGender = (RadioGroup)convertView.findViewById(R.id.user_gender);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        holder.userGender.check(userGlobalClass.getRadioGender());
+        holder.userGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                userGlobalClass.setRadioGender(checkedId);
+            }
+        });
+
+        holder.spinnerCountry.setSelection(userGlobalClass.getSpinnerCountryItem());
         holder.spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_default, android.R.layout.simple_spinner_item));
-                        break;
-                    case 1:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_azerbaijan, android.R.layout.simple_spinner_item));
-                        break;
-                    case 2:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_armenia, android.R.layout.simple_spinner_item));
-                        break;
-                    case 3:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_byelorussia, android.R.layout.simple_spinner_item));
-                        break;
-                    case 4:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_kazakhstan, android.R.layout.simple_spinner_item));
-                        break;
-                    case 5:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_kyrgyzstan, android.R.layout.simple_spinner_item));
-                        break;
-                    case 6:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_moldavia, android.R.layout.simple_spinner_item));
-                        break;
-                    case 7:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_russia, android.R.layout.simple_spinner_item));
-                        break;
-                    case 8:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_tajikistan, android.R.layout.simple_spinner_item));
-                        break;
-                    case 9:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_turkmenistan, android.R.layout.simple_spinner_item));
-                        break;
-                    case 10:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_uzbekistan, android.R.layout.simple_spinner_item));
-                        break;
-                    case 11:
-                        holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                                R.array.city_ukraine, android.R.layout.simple_spinner_item));
-                        break;
+                if (position != userGlobalClass.getSpinnerCountryItem()) k++;
+                userGlobalClass.setSpinnerCountryItem(position);
+                holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                        Countries[position], android.R.layout.simple_spinner_item));
+                if (k == 0){
+                    holder.spinnerCity.setSelection(userGlobalClass.getSpinnerCityItem());
+                } else {
+                    holder.spinnerCity.setSelection(0);
                 }
             }
 
@@ -146,8 +133,19 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
                         R.array.city_default, android.R.layout.simple_spinner_item));
             }
         });
-//        holder.editTextAgeFrom.setFilters(new InputFilter[]{new InputFilterMinMax("12", "99")});
-//        holder.editTextAgeTo.setFilters(new InputFilter[]{new InputFilterMinMax("12", "99")});
+
+        holder.spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                userGlobalClass.setSpinnerCityItem(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        holder.editTextAgeFrom.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2)});
+        holder.editTextAgeTo.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2)});
 
         return convertView;
     }
@@ -162,6 +160,7 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
         private EditText editTextAgeTo;
         private Spinner spinnerCountry;
         private Spinner spinnerCity;
+        private RadioGroup userGender;
     }
 
 }

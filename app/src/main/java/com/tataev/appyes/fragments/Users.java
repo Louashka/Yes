@@ -1,15 +1,19 @@
 package com.tataev.appyes.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -45,6 +49,7 @@ public class Users extends Fragment implements View.OnClickListener{
     private Bitmap bitmap;
     private ImageView imageRequest;
     private SearchView search_view_main;
+    private Parcelable state;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -120,10 +125,34 @@ public class Users extends Fragment implements View.OnClickListener{
         }
 
         usersSearchAdapter = new UsersSearchAdapter(getActivity());
+        usersSearchAdapter.hasStableIds();
         exListView.setAdapter(usersSearchAdapter);
 
         usersAdapter = new UsersAdapter(getActivity(), usersList);
         listViewUsers.setAdapter(usersAdapter);
+        listViewUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Удалить из списка друзей?")
+                        .setCancelable(true)
+                        .setPositiveButton("Да",
+                                new DialogInterface.OnClickListener(){
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                })
+                        .setNegativeButton("Нет",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+                return false;
+            }
+        });
 
         return rootView;
     }

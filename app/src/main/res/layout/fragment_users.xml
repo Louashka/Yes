@@ -24,6 +24,7 @@
         <SearchView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:queryHint="Поиск людей"
             android:id="@+id/searchViewUsers"
             android:searchIcon="@drawable/ic_search"
             android:voiceIcon="@drawable/ic_search_mic"
@@ -40,6 +41,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listViewUsers"
-        android:layout_margin="5dp"/>
+        android:layout_margin="10dp" />
 
 </LinearLayout>

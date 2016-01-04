@@ -8,15 +8,15 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageUsersAva"
+        android:id="@+id/imageRequestAva"
         android:layout_margin="3dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
-        android:id="@+id/usersName"
-        android:layout_toRightOf="@+id/imageUsersAva"
+        android:id="@+id/usersNameRequest"
+        android:layout_toRightOf="@+id/imageRequestAva"
         android:layout_centerVertical="true"
         android:layout_margin="5dp"
         android:textSize="16sp" />
@@ -24,9 +24,9 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/usersBasket"
-        android:layout_toLeftOf="@+id/usersLike"
-        android:src="@drawable/basket"
+        android:id="@+id/usersDecline"
+        android:layout_toLeftOf="@+id/usersAccept"
+        android:src="@drawable/decline"
         android:layout_centerVertical="true"
         android:adjustViewBounds="true"
         android:maxHeight="45dp" />
@@ -34,9 +34,9 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/usersLike"
-        android:layout_toLeftOf="@+id/usersStatus"
-        android:src="@drawable/like"
+        android:id="@+id/usersAccept"
+        android:layout_toLeftOf="@+id/usersStatusRequest"
+        android:src="@drawable/accept"
         android:layout_centerVertical="true"
         android:adjustViewBounds="true"
         android:maxHeight="45dp" />
@@ -44,7 +44,7 @@
     <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/usersStatus"
+        android:id="@+id/usersStatusRequest"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         style="@style/RadioButtonAppTheme"
