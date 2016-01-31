@@ -11,13 +11,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.RoundImage;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -44,6 +48,8 @@ public class Registration extends Fragment implements View.OnClickListener{
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final int CROP_FROM_CAMERA = 2;
     private ImageView imageRegLogo;
+    private Button buttonReg;
+    private String insertTableSQL;
 
     /**
      * Use this factory method to create a new instance of
@@ -83,6 +89,8 @@ public class Registration extends Fragment implements View.OnClickListener{
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Регистрация");
         View rootView = inflater.inflate(R.layout.fragment_registration, container, false);
         imageRegLogo = (ImageView)rootView.findViewById(R.id.imageRegLogo);
+        buttonReg = (Button)rootView.findViewById(R.id.buttonReg);
+
         imageRegLogo.setMaxWidth(350);
         imageRegLogo.setMaxHeight(350);
         imageRegLogo.setOnClickListener(this);
@@ -182,6 +190,16 @@ public class Registration extends Fragment implements View.OnClickListener{
             case R.id.imageRegLogo:
                 Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
+                break;
+            case R.id.buttonReg:
+                insertTableSQL = "INSERT INTO USERS"
+                        + "(LOGIN, PASSWORD, EMAIL, PURCHASE_HISTORY, GOODS_RECOMMENDATIONS) " + "VALUES"
+                        + "(loui,'12345','lou@gmail,com', " + 1 + 1 + ")";
+                try {
+                    Defaults.createDbUserTable(insertTableSQL);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 break;

@@ -142,4 +142,12 @@
         android:layout_height="2dp"
         android:background="@color/menu_tabs_line" />
 
+    <ExpandableListView
+        android:animateLayoutChanges="true"
+        android:id="@+id/elvCategories"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+    </ExpandableListView>
+
 </LinearLayout>

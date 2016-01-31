@@ -35,7 +35,8 @@
     <ExpandableListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/exListView" />
+        android:id="@+id/exListView"
+        android:descendantFocusability="afterDescendants"/>
 
     <ListView
         android:layout_width="wrap_content"

@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/usersDecline"
         android:layout_toLeftOf="@+id/usersAccept"
-        android:src="@drawable/decline"
+
         android:layout_centerVertical="true"
         android:adjustViewBounds="true"
         android:maxHeight="45dp" />
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/usersAccept"
         android:layout_toLeftOf="@+id/usersStatusRequest"
-        android:src="@drawable/accept"
+
         android:layout_centerVertical="true"
         android:adjustViewBounds="true"
         android:maxHeight="45dp" />

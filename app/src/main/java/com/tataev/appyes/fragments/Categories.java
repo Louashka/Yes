@@ -6,12 +6,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.SearchView;
+import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
+import com.tataev.appyes.adapters.CategoriesAdapter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +43,7 @@ public class Categories extends Fragment implements View.OnClickListener{
     private TextView categories_categ_tab;
     private Fragment fragment;
     private SearchView search_view_main;
+    private ExpandableListView elvCategories;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -90,6 +99,22 @@ public class Categories extends Fragment implements View.OnClickListener{
         reservation_categ_tab = (TextView)rootView.findViewById(R.id.reservation_categ_tab);
         categories_categ_tab = (TextView)rootView.findViewById(R.id.categories_categ_tab);
         search_view_main = (SearchView)rootView.findViewById(R.id.searchViewCategories);
+        elvCategories = (ExpandableListView)rootView.findViewById(R.id.elvCategories);
+
+        elvCategories.setAdapter(new CategoriesAdapter(getActivity()));
+
+        elvCategories.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("groupPosition", groupPosition);
+                bundle.putInt("childPosition", childPosition);
+                fragment = new CategoriesChildList();
+                fragment.setArguments(bundle);
+                Defaults.replaceFragment(fragment, getActivity());
+                return true;
+            }
+        });
 
         // Set OnClickListener to menu icons
         menu_categ_tab.setOnClickListener(this);

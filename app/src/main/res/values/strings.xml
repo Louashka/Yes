@@ -20,22 +20,6 @@
     <string name="nearby">Рядом</string>
     <string name="favorites">Избранное</string>
 
-    <string-array name="categories_items">
-        <item>Одежда для мужчин</item>
-        <item>Одежда для женщин</item>
-        <item>Детская одежда</item>
-        <item>Автотовары</item>
-        <item>Бижутерия и часы</item>
-        <item>Для дома и сада</item>
-        <item>Инструменты и материалы</item>
-        <item>Компьютерная техника</item>
-        <item>Красота и здоровье</item>
-        <item>Спорт и развлечения</item>
-        <item>Сумки и обувь</item>
-        <item>Телефоны и аксессуары</item>
-        <item>Электроника</item>
-    </string-array>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_novelty_adapter">NoveltyAdapter</string>
@@ -837,6 +821,289 @@
         <item>1999</item>
         <item>2000</item>
     </string-array>
+
+    <string-array name="categories_items">
+        <item>Одежда для мужчин</item>
+        <item>Одежда для женщин</item>
+        <item>Детские товары</item>
+        <item>Автотовары</item>
+        <item>Бижутерия и часы</item>
+        <item>Для дома и сада</item>
+        <item>Инструменты и материалы</item>
+        <item>Компьютерная техника</item>
+        <item>Красота и здоровье</item>
+        <item>Спорт и развлечения</item>
+        <item>Сумки и обувь</item>
+        <item>Телефоны и аксессуары</item>
+        <item>Электроника</item>
+    </string-array>
+
+    <string-array name="manCloth">
+        <item>Верх</item>
+        <item>Низ</item>
+        <item>Верхняя одежда</item>
+        <item>Пиджаки и костюмы</item>
+        <item>Спортивная одежда</item>
+        <item>Домашняя одежда</item>
+        <item>Плавки и пляжная одежда</item>
+        <item>Аксессуары</item>
+    </string-array>
+
+    <string-array name="womanCloth">
+        <item>Популярные товары</item>
+        <item>Низ</item>
+        <item>Верхняя одежда</item>
+        <item>Свадебные и торжественные платья</item>
+        <item>Нижнее бельё</item>
+        <item>Домашняя одежда</item>
+        <item>Спортивная одежда</item>
+        <item>Одежда для беременных</item>
+        <item>Аксессуары</item>
+    </string-array>
+
+    <string-array name="childCloth">
+        <item>Для новорожденных</item>
+        <item>Одежда для девочек</item>
+        <item>Для девушек</item>
+        <item>Одежда для мальчиков</item>
+        <item>Для юношей</item>
+        <item>Школа</item>
+        <item>Аксессуары</item>
+    </string-array>
+
+    <string-array name="otherCloth">
+        <item>Одежда</item>
+    </string-array>
+
+    <string-array name="upForManArray">
+        <item>Футболки</item>
+        <item>Поло</item>
+        <item>Майки</item>
+        <item>Рубашки</item>
+        <item>Пуловеры и кардиганы</item>
+        <item>Белье</item>
+    </string-array>
+
+    <string-array name="bottomForMan">
+        <item>Повседневные штаны </item>
+        <item>Джинсы</item>
+        <item>Шорты и бермуды</item>
+        <item>Нижнее бельё</item>
+        <item>Одежда для купания</item>
+        <item>Носки</item>
+        <item>Теплое белье</item>
+    </string-array>
+
+    <string-array name="jacetsAndCoatsArray">
+        <item>Куртки </item>
+        <item>Пальто</item>
+        <item>Плащи</item>
+        <item>Толстовки</item>
+        <item>Джинсовые куртки</item>
+        <item>Спортивные куртки</item>
+        <item>Ветровки</item>
+        <item>Кожанные куртки</item>
+        <item>Пуховики и парки </item>
+        <item>Жилеты</item>
+    </string-array>
+
+    <string-array name="suitAndBlazerArray">
+        <item>Пиджаки</item>
+        <item>Костюмы</item>
+    </string-array>
+
+    <string-array name="sportWearArray">
+        <item>Куртки</item>
+        <item>брюки</item>
+        <item>Куртка с капюшоном</item>
+        <item>Спортивный костюм </item>
+        <item>Брюки с начесоми</item>
+    </string-array>
+
+    <string-array name="accessoriesForManArray">
+        <item>Головные уборы (бейсболки, шапки )</item>
+        <item>Шарфы</item>
+        <item>Перчатки</item>
+        <item>Ремни и пояса</item>
+        <item>Сумки и портмоне</item>
+        <item>Галстуки и платки</item>
+        <item>Мужские украшения</item>
+        <item>Очки(Авиаторы, вайфареры, квадратная оправа, круглая оправа, овальная оправа)</item>
+        <item>Часы </item>
+        <item>Браслеты</item>
+    </string-array>
+
+    <string-array name="indoorClothingArray">
+        <item>Халаты</item>
+        <item>Брюки</item>
+        <item>Пижамы</item>
+    </string-array>
+
+    <string-array name="tranksAndShortArray">
+        <item>Плавки</item>
+        <item>Брюки</item>
+        <item>Пижамы</item>
+    </string-array>
+
+    <string-array name="category_spinner_array">
+        <item>ФИЛЬТР</item>
+        <item>цена (по возрастанию)</item>
+        <item>цена (по убыванию)</item>
+        <item>число заказов</item>
+        <item>число бронирование</item>
+        <item>рейтинг продавца</item>
+        <item>от нового к старому</item>
+        <item>акция, скидка, распродажа</item>
+        <item>оцененный товар</item>
+    </string-array>
+
+    <string-array name="bottomForWomanArray">
+        <item>Юбки (Летние юбки, Мини (короткие),Миди (средней длины),Макси (длинные),Джинсовые юбки,Теплые и вязаные юбки,
+Юбки-карандаш (прямые))</item>
+        <item>Шорты</item>
+        <item>Джинсы (Джинсовые шорты и бермуды,Джинсы-капри,Джинсы)</item>
+        <item>Брюки и капри</item>
+        <item>Леггинсы</item>
+    </string-array>
+
+    <string-array name="topForWomanArray">
+        <item>Пальто</item>
+        <item>Ветровки</item>
+        <item>Плащи и тренчкоты</item>
+        <item>Теплые куртки</item>
+        <item>Парки</item>
+        <item>Тренчи</item>
+        <item>Спортивные куртки</item>
+        <item>Джинсовые куртки</item>
+        <item>Жилеты </item>
+        <item>Толстовки</item>
+    </string-array>
+
+    <string-array name="babiesGoodArray">
+        <item>Белье, купальники</item>
+        <item>Боди, песочники</item>
+        <item>Брюки</item>
+        <item>Верхняя одежда(куртки, пальто, плащи)</item>
+        <item>Комбинезоны</item>
+        <item>Конверты</item>
+        <item>Комплекты</item>
+        <item>Костюмы</item>
+        <item>Кофточки</item>
+        <item>Кофты</item>
+        <item>Носки, колготки</item>
+        <item>Одежда для дома</item>
+        <item>Одежда для крещения</item>
+        <item>Платья, юбки</item>
+        <item>Ползунки</item>
+        <item>Футболки</item>
+        <item>Шорты</item>
+        <item>Белье, купальники</item>
+        <item>Обувь</item>
+    </string-array>
+
+    <string-array name="girlieGoodsArray">
+        <item>Белье, носки, колготки</item>
+        <item>Блузки, туники</item>
+        <item>Брюки и шорты</item>
+        <item>Верхняя одежда(куртки, пальто, плащи)</item>
+        <item>Водолазки, лонгсливы</item>
+        <item>Джинсы</item>
+        <item>Комбинезоны</item>
+        <item>Костюмы, комплекты</item>
+        <item>Кофты, жакеты</item>
+        <item>Купальники</item>
+        <item>Одежда для дома</item>
+        <item>Платья</item>
+        <item>Пуловеры, джемперы</item>
+        <item>Свитшоты, толстовки</item>
+        <item>Топы</item>
+        <item>Футболки</item>
+        <item>Шорты, бермуды</item>
+        <item>Юбки</item>
+        <item>Обувь</item>
+    </string-array>
+
+    <string-array name="girlGoodsArray">
+        <item>Белье, одежда для дома</item>
+        <item>Блузки, туники</item>
+        <item>Брюки, шорты</item>
+        <item>Верхняя одежда(куртки, пальто, плащи)</item>
+        <item>Джинсы</item>
+        <item>Кофты</item>
+        <item>Платья</item>
+        <item>Пуловеры, свитеры</item>
+        <item>Футболки, топы</item>
+        <item>Юбки</item>
+        <item>Болеро</item>
+        <item>Обувь</item>
+    </string-array>
+
+
+    <string-array name="weddingDressArray">
+        <item>Свадебные платья</item>
+        <item>Вечерние платья</item>
+        <item>Выпускные платья</item>
+        <item>Платья подружек невесты</item>
+        <item>Коктельные платья </item>
+    </string-array>
+
+    <string-array name="pregnantWearArray">
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
+
+    <string-array name="womanAccessoryArray">
+        <item>Головные уборы</item>
+        <item>Шарфы, платки, перчатки</item>
+        <item>Пояса и Ремни</item>
+        <item>Солнцезащитные очки</item>
+        <item>Бейсболки</item>
+    </string-array>
+
+    <string-array name="womanIndoorClothArray">
+        <item>Кофточки и топы</item>
+        <item>Пижамы </item>
+        <item>Ночные сорочки</item>
+        <item>Халаты </item>
+        <item>Брюки </item>
+        <item>Домашняя одежда</item>
+    </string-array>
+
+    <string-array name="womanSportWearArray">
+        <item>Куртки и пуловеры</item>
+        <item>Спортивные брюки</item>
+        <item>Спортивные костюмы</item>
+        <item>Футболки и топы</item>
+        <item>Обувь и аксессуары</item>
+        <item>Домашняя одежда</item>
+    </string-array>
+
+    <string-array name="womanUnderClothArrray">
+        <item>Бюстгальтеры</item>
+        <item>Неглиже</item>
+        <item>Купальники</item>
+        <item>Корсажи,майки,бодиы</item>
+        <item>Комплекты белья </item>
+        <item>Корректирующее белье</item>
+        <item>Чулки и носки </item>
+        <item>Аксессуары</item>
+    </string-array>
+
+    <string-array name="popularForWomanArray">
+        <item>Платья (летние платья,
+            повседневные платья, пляжные,
+            Короткие платья, Длинные платья(макси),
+            Вечерние и офисные платья, Джинсовые платья,
+            Трикотажные платья, Теплые и вязанные платья.)</item>
+        <item>Блузки и туники (блузки, кофты, рубашки, туники, джинсовые блузки и рубашки)</item>
+        <item>Кардиганы и пуловеры(болеро, кардиганы, пуловеры, водолазки, жилеты и безрукавки)</item>
+        <item>Футболки и топы (топы, футболки, поло)</item>
+        <item>Майки</item>
+        <item>Комбинезоны</item>
+        <item>Блейзеры, жакеты, костюмы(блейзеры и жакеты, жилеты, деловые костюмы, джинсовые жакеты и жилетки )</item>
+    </string-array>
+    <string name="title_activity_base">BaseActivity</string>
 
 </resources>
 
