@@ -192,14 +192,6 @@ public class Registration extends Fragment implements View.OnClickListener{
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
                 break;
             case R.id.buttonReg:
-                insertTableSQL = "INSERT INTO USERS"
-                        + "(LOGIN, PASSWORD, EMAIL, PURCHASE_HISTORY, GOODS_RECOMMENDATIONS) " + "VALUES"
-                        + "(loui,'12345','lou@gmail,com', " + 1 + 1 + ")";
-                try {
-                    Defaults.createDbUserTable(insertTableSQL);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
                 break;
             default:
                 break;
