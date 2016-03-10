@@ -1,16 +1,28 @@
 package com.tataev.appyes.fragments;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.tataev.appyes.AppConfig;
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +44,8 @@ public class Profile extends Fragment implements View.OnClickListener{
 
     private Button buttonReg;
     private Button buttonEnter;
+    private EditText editProfLogin;
+    private EditText editProfPswd;
     private Fragment fragment;
 
     private OnFragmentInteractionListener mListener;
@@ -97,6 +111,19 @@ public class Profile extends Fragment implements View.OnClickListener{
                 Defaults.replaceFragment(fragment, getActivity());
                 break;
             case R.id.buttonEnter:
+                String login = editProfLogin.getText().toString().trim();
+                String password = editProfPswd.getText().toString().trim();
+
+                // Check for empty data in the form
+                if (!login.isEmpty() && !password.isEmpty()) {
+                    // login user
+                    checkLogin(login, password);
+                } else {
+                    // Prompt user to enter credentials
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Please enter the credentials!", Toast.LENGTH_LONG)
+                            .show();
+                }
                 break;
             default:
                 break;
@@ -133,6 +160,91 @@ public class Profile extends Fragment implements View.OnClickListener{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    /**
+     * function to verify login details in mysql db
+     * */
+    private void checkLogin(final String email, final String password) {
+        // Tag used to cancel the request
+        String tag_string_req = "req_login";
+
+        pDialog.setMessage("Logging in ...");
+        showDialog();
+
+        StringRequest strReq = new StringRequest(Method.POST,
+                AppConfig.URL_LOGIN, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Login Response: " + response.toString());
+                hideDialog();
+
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    // Check for error node in json
+                    if (!error) {
+                        // user successfully logged in
+                        // Create login session
+                        session.setLogin(true);
+
+                        // Now store the user in SQLite
+                        String uid = jObj.getString("uid");
+
+                        JSONObject user = jObj.getJSONObject("user");
+                        String name = user.getString("name");
+                        String email = user.getString("email");
+                        String created_at = user
+                                .getString("created_at");
+
+                        // Inserting row in users table
+                        db.addUser(name, email, uid, created_at);
+
+                        // Launch main activity
+                        Intent intent = new Intent(LoginActivity.this,
+                                MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // Error in login. Get the error message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
+                    Toast.makeText(getActivity().getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Login Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("email", email);
+                params.put("password", password);
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
 }
