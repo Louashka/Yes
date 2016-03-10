@@ -1,5 +1,6 @@
 package com.tataev.appyes.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.net.Uri;
@@ -12,15 +13,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.tataev.appyes.AppConfig;
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
+import com.tataev.appyes.helper.AppController;
+import com.tataev.appyes.helper.SQLiteHandlerUser;
+import com.tataev.appyes.helper.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +48,10 @@ public class Profile extends Fragment implements View.OnClickListener{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private static final String TAG = "";
+    private ProgressDialog pDialog;
+    private SessionManager session;
+    private SQLiteHandlerUser db;
 
     private Button buttonReg;
     private Button buttonEnter;
@@ -88,11 +99,25 @@ public class Profile extends Fragment implements View.OnClickListener{
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Профиль");
 
+        // Progress dialog
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setCancelable(false);
+
+        // SQLite database handler
+        db = new SQLiteHandlerUser(getActivity().getApplicationContext());
+
+        // Session manager
+        session = new SessionManager(getActivity().getApplicationContext());
+
+
         //Initialize registration and login buttons
         buttonReg = (Button)rootView.findViewById(R.id.buttonReg);
         buttonEnter = (Button)rootView.findViewById(R.id.buttonEnter);
+        editProfLogin = (EditText)rootView.findViewById(R.id.editProfLogin);
+        editProfPswd = (EditText)rootView.findViewById(R.id.editProfPswd);
 
         buttonReg.setOnClickListener(this);
+        buttonEnter.setOnClickListener(this);
         return rootView;
     }
 
@@ -165,14 +190,14 @@ public class Profile extends Fragment implements View.OnClickListener{
     /**
      * function to verify login details in mysql db
      * */
-    private void checkLogin(final String email, final String password) {
+    private void checkLogin(final String login, final String password) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
 
         pDialog.setMessage("Logging in ...");
         showDialog();
 
-        StringRequest strReq = new StringRequest(Method.POST,
+        StringRequest strReq = new StringRequest(Request.Method.POST,
                 AppConfig.URL_LOGIN, new Response.Listener<String>() {
 
             @Override
@@ -191,22 +216,22 @@ public class Profile extends Fragment implements View.OnClickListener{
                         session.setLogin(true);
 
                         // Now store the user in SQLite
-                        String uid = jObj.getString("uid");
+//                        String uid = jObj.getString("uid");
 
                         JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("name");
+                        String login = user.getString("login");
                         String email = user.getString("email");
-                        String created_at = user
-                                .getString("created_at");
+//                        String created_at = user
+//                                .getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(name, email, uid, created_at);
+                        db.addUser(login, email);
 
                         // Launch main activity
-                        Intent intent = new Intent(LoginActivity.this,
-                                MainActivity.class);
-                        startActivity(intent);
-                        finish();
+//                        Intent intent = new Intent(LoginActivity.this,
+//                                MainActivity.class);
+//                        startActivity(intent);
+                        getActivity().finish();
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
@@ -225,7 +250,7 @@ public class Profile extends Fragment implements View.OnClickListener{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
+                Toast.makeText(getActivity().getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 hideDialog();
             }
@@ -235,7 +260,7 @@ public class Profile extends Fragment implements View.OnClickListener{
             protected Map<String, String> getParams() {
                 // Posting parameters to login url
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("email", email);
+                params.put("login", login);
                 params.put("password", password);
 
                 return params;
@@ -245,6 +270,16 @@ public class Profile extends Fragment implements View.OnClickListener{
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 
 }
