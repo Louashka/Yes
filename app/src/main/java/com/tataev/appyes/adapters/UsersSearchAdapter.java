@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import com.tataev.appyes.AppController;
 import com.tataev.appyes.R;
-import com.tataev.appyes.UserGlobalClass;
 
 /**
  * Created by louas_000 on 10.10.2015.
@@ -22,7 +22,7 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private LayoutInflater l_InflaterUA;
-    private UserGlobalClass userGlobalClass;
+    private AppController userGlobalClass;
     private int k = 0;
     private int Countries[] = new int[]{
             R.array.city_default,
@@ -42,7 +42,7 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
     public UsersSearchAdapter (Context context){
         this.context = context;
         l_InflaterUA = LayoutInflater.from(context);
-        userGlobalClass = (UserGlobalClass)context.getApplicationContext();
+        userGlobalClass = (AppController)context.getApplicationContext();
     }
 
     @Override

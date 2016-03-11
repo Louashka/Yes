@@ -1,7 +1,6 @@
 package com.tataev.appyes.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,10 +17,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.tataev.appyes.AppConfig;
+import com.tataev.appyes.AppController;
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
-import com.tataev.appyes.helper.AppController;
 import com.tataev.appyes.helper.SQLiteHandlerUser;
 import com.tataev.appyes.helper.SessionManager;
 

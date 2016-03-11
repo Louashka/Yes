@@ -1,8 +1,5 @@
-package com.tataev.appyes.helper;
+package com.tataev.appyes;
 
-/**
- * Created by louas_000 on 10.03.2016.
- */
 import android.app.Application;
 import android.text.TextUtils;
 
@@ -10,8 +7,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+/**
+ * Created by lou on 04.01.2016.
+ */
 public class AppController extends Application {
-
+    private int spinnerCountryItem;
+    private int spinnerCityItem;
+    private int radioGender;
+    private int ageFrom;
+    private int ageTo;
     public static final String TAG = AppController.class.getSimpleName();
 
     private RequestQueue mRequestQueue;
@@ -51,4 +55,40 @@ public class AppController extends Application {
             mRequestQueue.cancelAll(tag);
         }
     }
+
+    public int getSpinnerCountryItem(){
+        return spinnerCountryItem;
+    }
+    public void setSpinnerCountryItem(int spinnerCountryItem){
+        this.spinnerCountryItem = spinnerCountryItem;
+    }
+
+    public int getSpinnerCityItem(){
+        return spinnerCityItem;
+    }
+    public void setSpinnerCityItem(int spinnerCityItem){
+        this.spinnerCityItem = spinnerCityItem;
+    }
+
+    public int getRadioGender(){
+        return radioGender;
+    }
+    public void setRadioGender(int radioGender){
+        this.radioGender = radioGender;
+    }
+
+    public int getAgeFrom(){
+        return ageFrom;
+    }
+    public void setAgeFrom(int ageFrom){
+        this.ageFrom = ageFrom;
+    }
+
+    public int getAgeTo(){
+        return ageTo;
+    }
+    public void setAgeTo(int ageTo){
+        this.ageTo = ageTo;
+    }
+
 }
