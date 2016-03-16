@@ -108,6 +108,13 @@ public class Profile extends Fragment implements View.OnClickListener{
         // Session manager
         session = new SessionManager(getActivity().getApplicationContext());
 
+        // Check if user is already logged in or not
+        if (session.isLoggedIn()) {
+            // User is already logged in. Take him to main activity
+            fragment = new Reviews();
+            Defaults.replaceFragment(fragment, getActivity());
+            getActivity().finish();
+        }
 
         //Initialize registration and login buttons
         buttonReg = (Button)rootView.findViewById(R.id.buttonReg);
@@ -215,21 +222,19 @@ public class Profile extends Fragment implements View.OnClickListener{
                         session.setLogin(true);
 
                         // Now store the user in SQLite
-//                        String uid = jObj.getString("uid");
+                        String uid = jObj.getString("uid");
 
                         JSONObject user = jObj.getJSONObject("user");
                         String login = user.getString("login");
                         String email = user.getString("email");
-//                        String created_at = user
-//                                .getString("created_at");
+                        String created_at = user
+                                .getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(login, email);
+                        db.addUser(login, email, uid, created_at);
 
-                        // Launch main activity
-//                        Intent intent = new Intent(LoginActivity.this,
-//                                MainActivity.class);
-//                        startActivity(intent);
+                        fragment = new Reviews();
+                        Defaults.replaceFragment(fragment, getActivity());
                         getActivity().finish();
                     } else {
                         // Error in login. Get the error message
