@@ -1,6 +1,7 @@
 package com.tataev.appyes.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -8,21 +9,36 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.tataev.appyes.AppConfig;
+import com.tataev.appyes.AppController;
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.RoundImage;
+import com.tataev.appyes.helper.SQLiteHandlerUser;
+import com.tataev.appyes.helper.SessionManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +66,17 @@ public class Registration extends Fragment implements View.OnClickListener{
     private ImageView imageRegLogo;
     private Button buttonReg;
     private String insertTableSQL;
+    private static final String TAG = Registration.class.getSimpleName();
+    private EditText editRegLogin;
+    private EditText editRegPassword;
+    private EditText editRegRepeatPswd;
+    private EditText editRegEmail;
+    private CheckBox checkBoxShowHistory;
+    private CheckBox checkShowRecom;
+    private ProgressDialog pDialog;
+    private SessionManager session;
+    private SQLiteHandlerUser db;
+    private Fragment fragment;
 
     /**
      * Use this factory method to create a new instance of
@@ -90,10 +117,29 @@ public class Registration extends Fragment implements View.OnClickListener{
         View rootView = inflater.inflate(R.layout.fragment_registration, container, false);
         imageRegLogo = (ImageView)rootView.findViewById(R.id.imageRegLogo);
         buttonReg = (Button)rootView.findViewById(R.id.buttonReg);
+        editRegLogin = (EditText) rootView.findViewById(R.id.editRegLogin);
+        editRegPassword = (EditText) rootView.findViewById(R.id.editRegPassword);
+        editRegRepeatPswd = (EditText) rootView.findViewById(R.id.editRegRepeatPswd);
+        editRegEmail = (EditText) rootView.findViewById(R.id.editRegEmail);
+        checkBoxShowHistory = (CheckBox)rootView.findViewById(R.id.checkBoxShowHistory);
+        checkShowRecom = (CheckBox)rootView.findViewById(R.id.checkShowRecom);
 
         imageRegLogo.setMaxWidth(350);
         imageRegLogo.setMaxHeight(350);
         imageRegLogo.setOnClickListener(this);
+
+
+        // Progress dialog
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setCancelable(false);
+
+        // Session manager
+        session = new SessionManager(getActivity().getApplicationContext());
+
+        // SQLite database handler
+        db = new SQLiteHandlerUser(getActivity().getApplicationContext());
+
+        buttonReg.setOnClickListener(this);
 
         return rootView;
     }
@@ -192,10 +238,117 @@ public class Registration extends Fragment implements View.OnClickListener{
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
                 break;
             case R.id.buttonReg:
+                String login = editRegLogin.getText().toString().trim();
+                String email = editRegEmail.getText().toString().trim();
+                String password = editRegPassword.getText().toString().trim();
+                String history = "0";
+                String recommendations = "0";
+                if (checkBoxShowHistory.isChecked()) history = "1";
+                if (checkShowRecom.isChecked()) recommendations = "1";
+
+                if (!login.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
+                    registerUser(login, email, password, history, recommendations);
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Please enter your details!", Toast.LENGTH_LONG)
+                            .show();
+                }
                 break;
             default:
                 break;
         }
+    }
+
+    private void registerUser(final String login, final String email, final String password,
+                              final String history, final String recommendations) {
+        // Tag used to cancel the request
+        String tag_string_req = "req_register";
+
+        pDialog.setMessage("Registering ...");
+        showDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                AppConfig.URL_REGISTER, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Register Response: " + response.toString());
+                hideDialog();
+
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        // User successfully stored in MySQL
+                        // Now store the user in sqlite
+                        String uid = jObj.getString("uid");
+
+                        JSONObject user = jObj.getJSONObject("user");
+                        String login = user.getString("login");
+                        String email = user.getString("email");
+                        String created_at = user
+                                .getString("created_at");
+
+                        // Inserting row in users table
+                        db.addUser(login, email, uid, created_at);
+
+                        Toast.makeText(getActivity().getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
+
+                        // Launch login activity
+                        fragment = new Reviews();
+                        Defaults.replaceFragment(fragment, getActivity());
+                        getActivity().finish();
+                    } else {
+
+                        // Error occurred in registration. Get the error
+                        // message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Registration Error: " + error.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("login", login);
+                params.put("email", email);
+                params.put("password", password);
+                params.put("history", history);
+                params.put("recommendations", recommendations);
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 
 
