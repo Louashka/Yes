@@ -111,9 +111,8 @@ public class Profile extends Fragment implements View.OnClickListener{
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            fragment = new Reviews();
+            fragment = new UserData();
             Defaults.replaceFragment(fragment, getActivity());
-            getActivity().finish();
         }
 
         //Initialize registration and login buttons
@@ -233,9 +232,8 @@ public class Profile extends Fragment implements View.OnClickListener{
                         // Inserting row in users table
                         db.addUser(login, email, uid, created_at);
 
-                        fragment = new Reviews();
+                        fragment = new UserData();
                         Defaults.replaceFragment(fragment, getActivity());
-                        getActivity().finish();
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");

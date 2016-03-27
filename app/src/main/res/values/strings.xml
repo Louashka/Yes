@@ -64,6 +64,8 @@
     <string name="novelty_info">&gt;&gt; К информации о товарах и сервисных услугах</string>
     <string name="search_param">Параметры поиска</string>
     <string name="search_hint">Я ищу...</string>
+    <string name="log_out">Выход</string>
+    <string name="settings">Настройки</string>
 
     <string-array name="country_array">
         <item>Выберите страну</item>

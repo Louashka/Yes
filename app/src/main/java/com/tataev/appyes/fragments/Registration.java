@@ -292,12 +292,11 @@ public class Registration extends Fragment implements View.OnClickListener{
                         // Inserting row in users table
                         db.addUser(login, email, uid, created_at);
 
-                        Toast.makeText(getActivity().getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "User successfully registered!", Toast.LENGTH_LONG).show();
 
                         // Launch login activity
-                        fragment = new Reviews();
+                        fragment = new UserData();
                         Defaults.replaceFragment(fragment, getActivity());
-                        getActivity().finish();
                     } else {
 
                         // Error occurred in registration. Get the error
