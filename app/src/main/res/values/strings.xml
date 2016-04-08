@@ -39,13 +39,14 @@
     <string name="reg_gender">Ваш пол</string>
     <string name="male">м</string>
     <string name="female">ж</string>
-    <string name="birthday">Дата рождения</string>
+    <string name="birthday">Дата \nрождения</string>
     <string name="city">Город</string>
     <string name="name">Имя</string>
     <string name="surname">Фамилия</string>
     <string name="login">Логин или номер телефона</string>
     <string name="reg_password">Пароль (7 или более символов)</string>
     <string name="security">Защита</string>
+    <string name="address">Адрес доставки</string>
     <string name="repeat_pswd">Подтвердите пароль</string>
     <string name="mail">Адрес эл. почты</string>
     <string name="show_history">Показать друзьям историю покупок</string>
@@ -66,6 +67,7 @@
     <string name="search_hint">Я ищу...</string>
     <string name="log_out">Выход</string>
     <string name="settings">Настройки</string>
+    <string name="save">Сохранить</string>
 
     <string-array name="country_array">
         <item>Выберите страну</item>
@@ -752,10 +754,10 @@
     </string-array>
 
     <string-array name="discuss_draft">
-    <item>Оригинал Xiaomi Mi4 16 ГБ 4 г LTE...</item>
-    <item>Bluetooth беспроводной динамик Mini...</item>
-    <item>Мини водонепроницаемый беспроводной...</item>
-</string-array>
+        <item>Оригинал Xiaomi Mi4 16 ГБ 4 г LTE...</item>
+        <item>Bluetooth беспроводной динамик Mini...</item>
+        <item>Мини водонепроницаемый беспроводной...</item>
+    </string-array>
 
     <string-array name="reservation_items">
         <item>Купленные</item>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,9 +53,13 @@ public class Profile extends Fragment implements View.OnClickListener{
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandlerUser db;
+    private String codeOutput;
 
     private Button buttonReg;
     private Button buttonEnter;
+    private TextView textCode;
+    private TextView textRefreshImage;
+    private EditText editProfCode;
     private EditText editProfLogin;
     private EditText editProfPswd;
     private Fragment fragment;
@@ -120,9 +126,17 @@ public class Profile extends Fragment implements View.OnClickListener{
         buttonEnter = (Button)rootView.findViewById(R.id.buttonEnter);
         editProfLogin = (EditText)rootView.findViewById(R.id.editProfLogin);
         editProfPswd = (EditText)rootView.findViewById(R.id.editProfPswd);
+        textCode = (TextView)rootView.findViewById(R.id.textCode);
+        editProfCode = (EditText)rootView.findViewById(R.id.editProfCode);
+        textRefreshImage = (TextView)rootView.findViewById(R.id.textRefreshImage);
+
+        //Setting random string to textCode field
+        codeOutput = Defaults.generateRandomCode();
+        textCode.setText(codeOutput);
 
         buttonReg.setOnClickListener(this);
         buttonEnter.setOnClickListener(this);
+        textRefreshImage.setOnClickListener(this);
         return rootView;
     }
 
@@ -136,6 +150,10 @@ public class Profile extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.textRefreshImage:
+                codeOutput = Defaults.generateRandomCode();
+                textCode.setText(codeOutput);
+                break;
             case R.id.buttonReg:
                 fragment = new Registration();
                 Defaults.replaceFragment(fragment, getActivity());
@@ -143,15 +161,22 @@ public class Profile extends Fragment implements View.OnClickListener{
             case R.id.buttonEnter:
                 String login = editProfLogin.getText().toString().trim();
                 String password = editProfPswd.getText().toString().trim();
+                String code = editProfCode.getText().toString().trim();
 
                 // Check for empty data in the form
-                if (!login.isEmpty() && !password.isEmpty()) {
+                if (!login.isEmpty() && !password.isEmpty() && !code.isEmpty()) {
                     // login user
-                    checkLogin(login, password);
+                    if (code.equals(codeOutput)){
+                        checkLogin(login, password);
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Неверный код", Toast.LENGTH_LONG)
+                                .show();
+                    }
                 } else {
                     // Prompt user to enter credentials
                     Toast.makeText(getActivity().getApplicationContext(),
-                            "Please enter the credentials!", Toast.LENGTH_LONG)
+                            "Пожалуйста, заполните все поля!", Toast.LENGTH_LONG)
                             .show();
                 }
                 break;

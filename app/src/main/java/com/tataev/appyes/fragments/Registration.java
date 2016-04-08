@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -73,10 +74,13 @@ public class Registration extends Fragment implements View.OnClickListener{
     private EditText editRegEmail;
     private CheckBox checkBoxShowHistory;
     private CheckBox checkShowRecom;
+    private CheckBox checkBoxConfReg;
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandlerUser db;
     private Fragment fragment;
+    private Bitmap mBitmap;
+    private Map<String, String> params;
 
     /**
      * Use this factory method to create a new instance of
@@ -123,6 +127,18 @@ public class Registration extends Fragment implements View.OnClickListener{
         editRegEmail = (EditText) rootView.findViewById(R.id.editRegEmail);
         checkBoxShowHistory = (CheckBox)rootView.findViewById(R.id.checkBoxShowHistory);
         checkShowRecom = (CheckBox)rootView.findViewById(R.id.checkShowRecom);
+        checkBoxConfReg = (CheckBox)rootView.findViewById(R.id.checkBoxConfReg);
+
+        checkBoxConfReg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    buttonReg.setEnabled(true);
+                } else {
+                    buttonReg.setEnabled(false);
+                }
+            }
+        });
 
         imageRegLogo.setMaxWidth(350);
         imageRegLogo.setMaxHeight(350);
@@ -165,7 +181,7 @@ public class Registration extends Fragment implements View.OnClickListener{
                 Bundle extras = data.getExtras();
                 if (extras != null) {
                     try {
-                        Bitmap mBitmap = extras.getParcelable("data");
+                        mBitmap = extras.getParcelable("data");
                         RoundImage roundedImage = new RoundImage(mBitmap, 350, 350);
                         imageRegLogo.setImageDrawable(roundedImage);
                     } catch(Exception e){
@@ -241,16 +257,35 @@ public class Registration extends Fragment implements View.OnClickListener{
                 String login = editRegLogin.getText().toString().trim();
                 String email = editRegEmail.getText().toString().trim();
                 String password = editRegPassword.getText().toString().trim();
+                String repeatPassword = editRegRepeatPswd.getText().toString().trim();
                 String history = "0";
                 String recommendations = "0";
                 if (checkBoxShowHistory.isChecked()) history = "1";
                 if (checkShowRecom.isChecked()) recommendations = "1";
 
-                if (!login.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
-                    registerUser(login, email, password, history, recommendations);
+                if (!login.isEmpty() && !email.isEmpty() && !password.isEmpty() && !repeatPassword.isEmpty()) {
+                    if (password.length() > 6) {
+                        if (password.equals(repeatPassword)) {
+                            if (Defaults.isEmailValid(email)) {
+                                registerUser(login, email, password, history, recommendations);
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(),
+                                        "Неверный e-mail", Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    "Пароли не совпадают", Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Пароль слишком короткий", Toast.LENGTH_LONG)
+                                .show();
+                    }
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(),
-                            "Please enter your details!", Toast.LENGTH_LONG)
+                            "Пожалуйста, заполните все поля!", Toast.LENGTH_LONG)
                             .show();
                 }
                 break;
@@ -323,13 +358,16 @@ public class Registration extends Fragment implements View.OnClickListener{
 
             @Override
             protected Map<String, String> getParams() {
+                //Converting Bitmap to String
+                String photo = Defaults.getStringImage(mBitmap);
                 // Posting params to register url
-                Map<String, String> params = new HashMap<String, String>();
+                params = new HashMap<String, String>();
                 params.put("login", login);
                 params.put("email", email);
                 params.put("password", password);
                 params.put("history", history);
                 params.put("recommendations", recommendations);
+                params.put("photo", photo);
 
                 return params;
             }

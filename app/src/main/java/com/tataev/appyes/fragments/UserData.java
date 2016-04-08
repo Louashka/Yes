@@ -112,6 +112,8 @@ public class UserData extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.buttonSettings:
+                fragment = new ProfileSettings();
+                Defaults.replaceFragment(fragment, getActivity());
                 break;
             case R.id.buttonLogOut:
                 logoutUser();
