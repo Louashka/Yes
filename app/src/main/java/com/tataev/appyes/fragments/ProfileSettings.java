@@ -7,6 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.tataev.appyes.R;
 
@@ -29,6 +37,21 @@ public class ProfileSettings extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private ImageView imageLogoSettings;
+    private EditText editNameSettings;
+    private EditText editSurnameSettings;
+    private EditText daySettings;
+    private Spinner spinnerMonthsSettings;
+    private EditText yearSettings;
+    private RadioGroup radioGroupSettings;
+    private int radioMale = R.id.radioMaleSetting;
+    private int radioFemale = R.id.radioFemaleSettings;
+    private EditText editAddressSettings;
+    private EditText editEmailSettings;
+    private CheckBox checkBoxShowHistorySettings;
+    private CheckBox checkShowRecomSettings;
+    private Button buttonSave;
+
 
     public ProfileSettings() {
         // Required empty public constructor
@@ -66,6 +89,20 @@ public class ProfileSettings extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile_settings, container, false);
+
+        imageLogoSettings = (ImageView)rootView.findViewById(R.id.imageLogoSettings);
+        editNameSettings = (EditText)rootView.findViewById(R.id.editNameSettings);
+        editSurnameSettings = (EditText)rootView.findViewById(R.id.editSurnameSettings);
+        daySettings = (EditText)rootView.findViewById(R.id.daySettings);
+        spinnerMonthsSettings = (Spinner)rootView.findViewById(R.id.spinnerMonthsSettings);
+        yearSettings = (EditText)rootView.findViewById(R.id.yearSettings);
+        radioGroupSettings = (RadioGroup)rootView.findViewById(R.id.radioGroupSettings);
+        editAddressSettings = (EditText)rootView.findViewById(R.id.editAddressSettings);
+        editEmailSettings = (EditText)rootView.findViewById(R.id.editEmailSettings);
+        checkBoxShowHistorySettings = (CheckBox)rootView.findViewById(R.id.checkBoxShowHistorySettings);
+        checkShowRecomSettings = (CheckBox)rootView.findViewById(R.id.checkShowRecomSettings);
+        buttonSave = (Button)rootView.findViewById(R.id.buttonSave);
+
         return rootView;
     }
 

@@ -321,11 +321,21 @@ public class Registration extends Fragment implements View.OnClickListener{
                         JSONObject user = jObj.getJSONObject("user");
                         String login = user.getString("login");
                         String email = user.getString("email");
+                        String name = user.getString("name");
+                        String surname = user.getString("surname");
+                        String photo = user.getString("photo");
+                        String birthday = user.getString("birthday");
+                        String gender = user.getString("gender");
+                        Boolean history = user.getBoolean("history");
+                        Boolean recommendations = user.getBoolean("recommendations");
                         String created_at = user
                                 .getString("created_at");
+                        String updated_at = user
+                                .getString("updated_at");
 
                         // Inserting row in users table
-                        db.addUser(login, email, uid, created_at);
+                        db.addUser(login, email, uid, name, surname, photo, birthday, gender, history,
+                                recommendations, created_at, updated_at);
 
                         Toast.makeText(getActivity().getApplicationContext(), "User successfully registered!", Toast.LENGTH_LONG).show();
 

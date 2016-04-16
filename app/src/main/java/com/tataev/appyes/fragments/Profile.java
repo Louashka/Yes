@@ -1,6 +1,8 @@
 package com.tataev.appyes.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,6 +56,8 @@ public class Profile extends Fragment implements View.OnClickListener{
     private SessionManager session;
     private SQLiteHandlerUser db;
     private String codeOutput;
+    private SharedPreferences sPref;
+    private final String UNIQUE_ID = "unique_id";
 
     private Button buttonReg;
     private Button buttonEnter;
@@ -251,11 +255,26 @@ public class Profile extends Fragment implements View.OnClickListener{
                         JSONObject user = jObj.getJSONObject("user");
                         String login = user.getString("login");
                         String email = user.getString("email");
+                        String name = user.getString("name");
+                        String surname = user.getString("surname");
+                        String photo = user.getString("photo");
+                        String birthday = user.getString("birthday");
+                        String gender = user.getString("gender");
+                        Boolean history = user.getBoolean("history");
+                        Boolean recommendations = user.getBoolean("recommendations");
                         String created_at = user
                                 .getString("created_at");
+                        String updated_at = user
+                                .getString("updated_at");
+
+                        //Saving unique id in SharedPreferences
+                        sPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor ed = sPref.edit();
+                        ed.putString(UNIQUE_ID, uid);
+                        ed.commit();
 
                         // Inserting row in users table
-                        db.addUser(login, email, uid, created_at);
+                        db.addUser(login, email, uid, name, surname, photo, birthday, gender, history, recommendations, created_at, updated_at);
 
                         fragment = new UserData();
                         Defaults.replaceFragment(fragment, getActivity());

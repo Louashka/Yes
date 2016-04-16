@@ -10,5 +10,8 @@ public class AppConfig {
 
     // Server user register url
     public static String URL_REGISTER = "http://88.212.220.246/tataev.ru/public_html/android_api/register.php";
+
+    // Server user update url
+    public static String URL_UPDATE = "http://88.212.220.246/tataev.ru/public_html/android_api/update.php";
 }
 
