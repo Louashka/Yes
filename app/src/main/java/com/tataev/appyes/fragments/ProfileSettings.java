@@ -16,7 +16,12 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.tataev.appyes.Defaults;
 import com.tataev.appyes.R;
+import com.tataev.appyes.helper.SQLiteHandlerUser;
+import com.tataev.appyes.helper.SessionManager;
+
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,7 +31,7 @@ import com.tataev.appyes.R;
  * Use the {@link ProfileSettings#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileSettings extends Fragment {
+public class ProfileSettings extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,6 +40,9 @@ public class ProfileSettings extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String codeOutput;
+    private SQLiteHandlerUser db;
+    private SessionManager session;
 
     private OnFragmentInteractionListener mListener;
     private ImageView imageLogoSettings;
@@ -50,6 +58,7 @@ public class ProfileSettings extends Fragment {
     private EditText editEmailSettings;
     private CheckBox checkBoxShowHistorySettings;
     private CheckBox checkShowRecomSettings;
+    private TextView textCodeSettings;
     private Button buttonSave;
 
 
@@ -101,7 +110,48 @@ public class ProfileSettings extends Fragment {
         editEmailSettings = (EditText)rootView.findViewById(R.id.editEmailSettings);
         checkBoxShowHistorySettings = (CheckBox)rootView.findViewById(R.id.checkBoxShowHistorySettings);
         checkShowRecomSettings = (CheckBox)rootView.findViewById(R.id.checkShowRecomSettings);
+        textCodeSettings = (TextView)rootView.findViewById(R.id.textCodeSettings);
         buttonSave = (Button)rootView.findViewById(R.id.buttonSave);
+
+        // SqLite database handler
+        db = new SQLiteHandlerUser(getActivity().getApplicationContext());
+        // session manager
+        session = new SessionManager(getActivity().getApplicationContext());
+
+        // Fetching user details from sqlite
+        HashMap<String, String> user = db.getUserDetails();
+        String name = user.get("name");
+        String surname = user.get("surname");
+        String birthday = user.get("birthday");
+        String gender = user.get("gender");
+        String address = user.get("address");
+        String email = user.get("email");
+        String history = user.get("history");
+        String recommendations = user.get("recommendations");
+
+        if (birthday != null) {
+            String year = birthday.split("-")[0];
+            String month = birthday.split("-")[1];
+            String day = birthday.split("-")[2];
+            daySettings.setText(day);
+            yearSettings.setText(year);
+            spinnerMonthsSettings.setSelection(Integer.parseInt(month) - 1);
+        }
+
+        editNameSettings.setText(name);
+        editSurnameSettings.setText(surname);
+        editAddressSettings.setText(address);
+        if (gender.equals("м")) radioGroupSettings.check(radioMale);
+        if (gender.equals("ж")) radioGroupSettings.check(radioFemale);
+        editEmailSettings.setText(email);
+        if (history.equals("1")) checkBoxShowHistorySettings.setChecked(true);
+        if (recommendations.equals("1")) checkShowRecomSettings.setChecked(true);
+
+        //Setting random string to textCodeSettings field
+        codeOutput = Defaults.generateRandomCode();
+        textCodeSettings.setText(codeOutput);
+
+        buttonSave.setOnClickListener(this);
 
         return rootView;
     }
@@ -111,6 +161,15 @@ public class ProfileSettings extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.buttonSave:
+                break;
+        }
+
     }
 
 //    @Override

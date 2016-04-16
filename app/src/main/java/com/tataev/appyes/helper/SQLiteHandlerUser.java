@@ -18,7 +18,7 @@ public class SQLiteHandlerUser extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Name
     private static final String DATABASE_NAME = "yes";
@@ -36,6 +36,7 @@ public class SQLiteHandlerUser extends SQLiteOpenHelper {
     private static final String KEY_PHOTO = "photo";
     private static final String KEY_BIRTHDAY = "birthday";
     private static final String KEY_GENDER = "gender";
+    private static final String KEY_ADDRESS = "address";
     private static final String KEY_HISTORY = "history";
     private static final String KEY_RECOMMENDATIONS = "recommendations";
     private static final String KEY_CREATED_AT = "created_at";
@@ -53,7 +54,7 @@ public class SQLiteHandlerUser extends SQLiteOpenHelper {
                 + KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT,"
                 + KEY_NAME + " TEXT," + KEY_SURNAME + " TEXT,"
                 + KEY_PHOTO + " TEXT," + KEY_BIRTHDAY + " TEXT,"
-                + KEY_GENDER + " TEXT," + KEY_HISTORY + " BOOLEAN,"
+                + KEY_GENDER + " TEXT," + KEY_ADDRESS + " TEXT," + KEY_HISTORY + " BOOLEAN,"
                 + KEY_RECOMMENDATIONS + " BOOLEAN," + KEY_UPDATED_AT + " TEXT,"
                 + KEY_CREATED_AT + " TEXT" + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
@@ -74,8 +75,8 @@ public class SQLiteHandlerUser extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(String login, String email, String uid, String name, String surname, String photo,
-                        String birthday, String gender, Boolean history, Boolean recommendations, String created_at, String updated_at) {
+    public void addUser(String login, String email, String uid, String name, String surname, String photo, String birthday,
+                        String gender, String address, Integer history, Integer recommendations, String created_at, String updated_at) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -87,6 +88,7 @@ public class SQLiteHandlerUser extends SQLiteOpenHelper {
         values.put(KEY_PHOTO, photo); // URL
         values.put(KEY_BIRTHDAY, birthday); // Birthday
         values.put(KEY_GENDER, gender); // Gender
+        values.put(KEY_ADDRESS, address); // Address
         values.put(KEY_HISTORY, history); // History
         values.put(KEY_RECOMMENDATIONS, recommendations); // Recommendations
         values.put(KEY_CREATED_AT, created_at); // Created At
@@ -119,10 +121,11 @@ public class SQLiteHandlerUser extends SQLiteOpenHelper {
             user.put("photo", cursor.getString(6));
             user.put("birthday", cursor.getString(7));
             user.put("gender", cursor.getString(8));
-            user.put("history", cursor.getString(9));
-            user.put("recommendations", cursor.getString(10));
-            user.put("created_at", cursor.getString(11));
-            user.put("updated_at", cursor.getString(12));
+            user.put("address", cursor.getString(9));
+            user.put("history", cursor.getString(10));
+            user.put("recommendations", cursor.getString(11));
+            user.put("created_at", cursor.getString(12));
+            user.put("updated_at", cursor.getString(13));
         }
         cursor.close();
         db.close();

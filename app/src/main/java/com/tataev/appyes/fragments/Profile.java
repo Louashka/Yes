@@ -260,8 +260,9 @@ public class Profile extends Fragment implements View.OnClickListener{
                         String photo = user.getString("photo");
                         String birthday = user.getString("birthday");
                         String gender = user.getString("gender");
-                        Boolean history = user.getBoolean("history");
-                        Boolean recommendations = user.getBoolean("recommendations");
+                        String address = user.getString("address");
+                        Integer history = user.getInt("history");
+                        Integer recommendations = user.getInt("recommendations");
                         String created_at = user
                                 .getString("created_at");
                         String updated_at = user
@@ -274,7 +275,8 @@ public class Profile extends Fragment implements View.OnClickListener{
                         ed.commit();
 
                         // Inserting row in users table
-                        db.addUser(login, email, uid, name, surname, photo, birthday, gender, history, recommendations, created_at, updated_at);
+                        db.addUser(login, email, uid, name, surname, photo, birthday, gender, address, history,
+                                recommendations, created_at, updated_at);
 
                         fragment = new UserData();
                         Defaults.replaceFragment(fragment, getActivity());
