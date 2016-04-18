@@ -1,9 +1,12 @@
 package com.tataev.appyes.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +18,24 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.tataev.appyes.AppConfig;
+import com.tataev.appyes.AppController;
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.R;
 import com.tataev.appyes.helper.SQLiteHandlerUser;
 import com.tataev.appyes.helper.SessionManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,13 +50,19 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = ProfileSettings.class.getSimpleName();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private String codeOutput;
+    private ProgressDialog pDialog;
     private SQLiteHandlerUser db;
     private SessionManager session;
+    private String uid;
+    private Fragment fragment;
+    private Bitmap mBitmap;
+    private Map<String, String> params;
 
     private OnFragmentInteractionListener mListener;
     private ImageView imageLogoSettings;
@@ -58,6 +78,7 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
     private EditText editEmailSettings;
     private CheckBox checkBoxShowHistorySettings;
     private CheckBox checkShowRecomSettings;
+    private EditText editCodeSettings;
     private TextView textCodeSettings;
     private Button buttonSave;
 
@@ -111,15 +132,22 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         checkBoxShowHistorySettings = (CheckBox)rootView.findViewById(R.id.checkBoxShowHistorySettings);
         checkShowRecomSettings = (CheckBox)rootView.findViewById(R.id.checkShowRecomSettings);
         textCodeSettings = (TextView)rootView.findViewById(R.id.textCodeSettings);
+        editCodeSettings = (EditText)rootView.findViewById(R.id.editCodeSettings);
         buttonSave = (Button)rootView.findViewById(R.id.buttonSave);
 
-        // SqLite database handler
+        // Progress dialog
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setCancelable(false);
+
+        // SQLite database handler
         db = new SQLiteHandlerUser(getActivity().getApplicationContext());
-        // session manager
+
+        // Session manager
         session = new SessionManager(getActivity().getApplicationContext());
 
         // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
+        uid =  user.get("uid");
         String name = user.get("name");
         String surname = user.get("surname");
         String birthday = user.get("birthday");
@@ -167,6 +195,36 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.buttonSave:
+                String email = editEmailSettings.getText().toString().trim();
+                String name = editNameSettings.getText().toString().trim();
+                String surname = editSurnameSettings.getText().toString().trim();
+                String birthday = yearSettings.getText().toString().trim() + "-" + String.valueOf(spinnerMonthsSettings.getSelectedItemPosition()+ 1)
+                        + "-" + daySettings.getText().toString().trim();
+                String gender = null;
+                int id = radioGroupSettings.getCheckedRadioButtonId();
+                if (id == radioMale) gender = "м";
+                if (id == radioFemale) gender = "ж";
+                String address = editAddressSettings.getText().toString().trim();
+                String history = "0";
+                String recommendations = "0";
+                if (checkBoxShowHistorySettings.isChecked()) history = "1";
+                if (checkShowRecomSettings.isChecked()) recommendations = "1";
+
+                String code = editCodeSettings.getText().toString().trim();
+                if (!uid.isEmpty()) {
+                    if (code.equals(codeOutput)){
+                        updateUser(uid, name, surname, history, recommendations, birthday, gender, address, email);
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Неверный код", Toast.LENGTH_LONG)
+                                .show();
+                    }
+                } else {
+                    // Prompt user to enter credentials
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Ошибка: пользователь не авторизован!", Toast.LENGTH_LONG)
+                            .show();
+                }
                 break;
         }
 
@@ -202,5 +260,112 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void updateUser (final String uid, final String name, final String surname, final String history, final String recommendations,
+                             final String birthday, final String gender, final String address, final String email) {
+
+        // Tag used to cancel the request
+        String tag_string_req = "req_update";
+
+        pDialog.setMessage("Updating ...");
+        showDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                AppConfig.URL_UPDATE, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Update Response: " + response.toString());
+                hideDialog();
+
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        // User successfully stored in MySQL
+                        // Now store the user in sqlite
+
+                        JSONObject user = jObj.getJSONObject("user");
+                        String login = user.getString("login");
+                        String email = user.getString("email");
+                        String name = user.getString("name");
+                        String surname = user.getString("surname");
+                        String photo = user.getString("photo");
+                        String birthday = user.getString("birthday");
+                        String gender = user.getString("gender");
+                        String address = user.getString("address");
+                        Integer history = user.getInt("history");
+                        Integer recommendations = user.getInt("recommendations");
+                        String created_at = user
+                                .getString("created_at");
+                        String updated_at = user
+                                .getString("updated_at");
+
+                        // Updating row in users table
+                        db.updateUser(email, uid, name, surname, photo, birthday, gender, address, history,
+                                recommendations, created_at, updated_at);
+
+                        Toast.makeText(getActivity().getApplicationContext(), "User successfully updated!", Toast.LENGTH_LONG).show();
+
+                        // Launch login activity
+                        fragment = new UserData();
+                        Defaults.replaceFragment(fragment, getActivity());
+                    } else {
+
+                        // Error occurred in registration. Get the error
+                        // message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Update Error: " + error.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                //Converting Bitmap to String
+                String photo = Defaults.getStringImage(mBitmap);
+                // Posting params to register url
+                params = new HashMap<String, String>();
+                params.put("uid", uid);
+                params.put("name", name);
+                params.put("surname", surname);
+                params.put("photo", photo);
+                params.put("history", history);
+                params.put("recommendations", recommendations);
+                params.put("birthday", birthday);
+                params.put("gender", gender);
+                params.put("address", address);
+                params.put("email", email);
+
+                return params;
+            }
+
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 }

@@ -123,6 +123,8 @@ public class Profile extends Fragment implements View.OnClickListener{
             // User is already logged in. Take him to main activity
             fragment = new UserData();
             Defaults.replaceFragment(fragment, getActivity());
+        } else {
+            db.deleteUsers();
         }
 
         //Initialize registration and login buttons
