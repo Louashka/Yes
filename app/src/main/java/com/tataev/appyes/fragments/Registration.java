@@ -370,7 +370,8 @@ public class Registration extends Fragment implements View.OnClickListener{
             @Override
             protected Map<String, String> getParams() {
                 //Converting Bitmap to String
-                String photo = Defaults.getStringImage(mBitmap);
+                String photo = null;
+                if (mBitmap != null) photo = Defaults.getStringImage(mBitmap);
                 // Posting params to register url
                 params = new HashMap<String, String>();
                 params.put("login", login);

@@ -30,6 +30,8 @@ import com.tataev.appyes.helper.SessionManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -257,7 +259,12 @@ public class Profile extends Fragment implements View.OnClickListener{
                         JSONObject user = jObj.getJSONObject("user");
                         String login = user.getString("login");
                         String email = user.getString("email");
-                        String name = user.getString("name");
+                        String name = "";
+                        try {
+                            name = new String(user.getString("name").getBytes("windows-1251"), "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
                         String surname = user.getString("surname");
                         String photo = user.getString("photo");
                         String birthday = user.getString("birthday");

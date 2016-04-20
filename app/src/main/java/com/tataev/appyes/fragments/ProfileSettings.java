@@ -1,7 +1,11 @@
 package com.tataev.appyes.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +32,7 @@ import com.tataev.appyes.AppConfig;
 import com.tataev.appyes.AppController;
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.R;
+import com.tataev.appyes.RoundImage;
 import com.tataev.appyes.helper.SQLiteHandlerUser;
 import com.tataev.appyes.helper.SessionManager;
 
@@ -35,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,6 +69,9 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
     private Fragment fragment;
     private Bitmap mBitmap;
     private Map<String, String> params;
+    private Uri mImageCaptureUri;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    private static final int CROP_FROM_CAMERA = 2;
 
     private OnFragmentInteractionListener mListener;
     private ImageView imageLogoSettings;
@@ -180,6 +189,9 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         textCodeSettings.setText(codeOutput);
 
         buttonSave.setOnClickListener(this);
+        imageLogoSettings.setMaxWidth(350);
+        imageLogoSettings.setMaxHeight(350);
+        imageLogoSettings.setOnClickListener(this);
 
         return rootView;
     }
@@ -191,9 +203,92 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         }
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != Activity.RESULT_OK)
+            return;
+        switch (requestCode) {
+            case RESULT_LOAD_IMAGE:
+                mImageCaptureUri = data.getData();
+                doCrop();
+                break;
+            case CROP_FROM_CAMERA:
+                Bundle extras = data.getExtras();
+                if (extras != null) {
+                    try {
+                        mBitmap = extras.getParcelable("data");
+                        RoundImage roundedImage = new RoundImage(mBitmap, 350, 350);
+                        imageLogoSettings.setImageDrawable(roundedImage);
+                    } catch(Exception e){
+                        Toast.makeText(getActivity(), "Failed loading image from gallery", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                break;
+        }
+
+    }
+
+    private void doCrop() {
+        /**
+         * Open image crop app by starting an intent
+         * ‘com.android.camera.action.CROP‘.
+         */
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setType("image/*");
+
+        /**
+         * Check if there is image cropper app installed.
+         */
+        List<ResolveInfo> list = getActivity().getPackageManager().queryIntentActivities(
+                intent, 0);
+
+        int size = list.size();
+
+        /**
+         * If there is no image cropper app, display warning message
+         */
+        if (size == 0) {
+
+            Toast.makeText(getActivity(), "Can not find image crop app",
+                    Toast.LENGTH_SHORT).show();
+
+            return;
+        } else {
+            /**
+             * Specify the image path, crop dimension and scale
+             */
+            intent.setData(mImageCaptureUri);
+
+            intent.putExtra("aspectX", 50);
+            intent.putExtra("aspectY", 50);
+            intent.putExtra("scale", true);
+            intent.putExtra("return-data", true);
+            /**
+             * There is posibility when more than one image cropper app exist,
+             * so we have to check for it first. If there is only one app, open
+             * then app.
+             */
+
+            Intent i = new Intent(intent);
+            ResolveInfo res = list.get(0);
+
+            i.setComponent(new ComponentName(res.activityInfo.packageName,
+                    res.activityInfo.name));
+
+            startActivityForResult(i, CROP_FROM_CAMERA);
+
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.imageLogoSettings:
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                break;
             case R.id.buttonSave:
                 String email = editEmailSettings.getText().toString().trim();
                 String name = editNameSettings.getText().toString().trim();
@@ -337,7 +432,8 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
             @Override
             protected Map<String, String> getParams() {
                 //Converting Bitmap to String
-                String photo = Defaults.getStringImage(mBitmap);
+                String photo = null;
+                if (mBitmap != null) photo = Defaults.getStringImage(mBitmap);
                 // Posting params to register url
                 params = new HashMap<String, String>();
                 params.put("uid", uid);
