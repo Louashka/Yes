@@ -51,7 +51,7 @@ public class SQLiteHandlerUser extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_LOGIN + " TEXT UNIQUE,"
-                + KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT,"
+                + KEY_EMAIL + " TEXT," + KEY_UID + " TEXT,"
                 + KEY_NAME + " TEXT," + KEY_SURNAME + " TEXT,"
                 + KEY_PHOTO + " TEXT," + KEY_BIRTHDAY + " TEXT,"
                 + KEY_GENDER + " TEXT," + KEY_ADDRESS + " TEXT," + KEY_HISTORY + " BOOLEAN,"

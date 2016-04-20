@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +26,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.tataev.appyes.AppConfig;
 import com.tataev.appyes.AppController;
 import com.tataev.appyes.Defaults;
+import com.tataev.appyes.LruBitmapCache;
 import com.tataev.appyes.R;
 import com.tataev.appyes.RoundImage;
 import com.tataev.appyes.helper.SQLiteHandlerUser;
@@ -70,11 +76,13 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
     private Bitmap mBitmap;
     private Map<String, String> params;
     private Uri mImageCaptureUri;
+    ImageLoader mImageLoader;
+    RequestQueue mRequestQueue;
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final int CROP_FROM_CAMERA = 2;
 
     private OnFragmentInteractionListener mListener;
-    private ImageView imageLogoSettings;
+    private NetworkImageView imageLogoSettings;
     private EditText editNameSettings;
     private EditText editSurnameSettings;
     private EditText daySettings;
@@ -129,7 +137,7 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile_settings, container, false);
 
-        imageLogoSettings = (ImageView)rootView.findViewById(R.id.imageLogoSettings);
+        imageLogoSettings = (NetworkImageView)rootView.findViewById(R.id.imageLogoSettings);
         editNameSettings = (EditText)rootView.findViewById(R.id.editNameSettings);
         editSurnameSettings = (EditText)rootView.findViewById(R.id.editSurnameSettings);
         daySettings = (EditText)rootView.findViewById(R.id.daySettings);
@@ -165,6 +173,12 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         String email = user.get("email");
         String history = user.get("history");
         String recommendations = user.get("recommendations");
+        String url = user.get("photo");
+        if (Patterns.WEB_URL.matcher(url).matches() == true){
+            ImageLoader mImageLoader = new ImageLoader(mRequestQueue, new LruBitmapCache(
+                    LruBitmapCache.getCacheSize(getActivity())));
+            imageLogoSettings.setImageUrl(url, mImageLoader);
+        }
 
         if (birthday != null) {
             String year = birthday.split("-")[0];
@@ -178,8 +192,8 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         editNameSettings.setText(name);
         editSurnameSettings.setText(surname);
         editAddressSettings.setText(address);
-        if (gender.equals("м")) radioGroupSettings.check(radioMale);
-        if (gender.equals("ж")) radioGroupSettings.check(radioFemale);
+        if (gender.equals("m")) radioGroupSettings.check(radioMale);
+        if (gender.equals("f")) radioGroupSettings.check(radioFemale);
         editEmailSettings.setText(email);
         if (history.equals("1")) checkBoxShowHistorySettings.setChecked(true);
         if (recommendations.equals("1")) checkShowRecomSettings.setChecked(true);
@@ -295,10 +309,10 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
                 String surname = editSurnameSettings.getText().toString().trim();
                 String birthday = yearSettings.getText().toString().trim() + "-" + String.valueOf(spinnerMonthsSettings.getSelectedItemPosition()+ 1)
                         + "-" + daySettings.getText().toString().trim();
-                String gender = null;
+                String gender = "not define";
                 int id = radioGroupSettings.getCheckedRadioButtonId();
-                if (id == radioMale) gender = "м";
-                if (id == radioFemale) gender = "ж";
+                if (id == radioMale) gender = "m";
+                if (id == radioFemale) gender = "f";
                 String address = editAddressSettings.getText().toString().trim();
                 String history = "0";
                 String recommendations = "0";
@@ -382,7 +396,6 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
                         // Now store the user in sqlite
 
                         JSONObject user = jObj.getJSONObject("user");
-                        String login = user.getString("login");
                         String email = user.getString("email");
                         String name = user.getString("name");
                         String surname = user.getString("surname");
@@ -432,14 +445,14 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
             @Override
             protected Map<String, String> getParams() {
                 //Converting Bitmap to String
-                String photo = null;
-                if (mBitmap != null) photo = Defaults.getStringImage(mBitmap);
+//                String photo = "";
+//                if (mBitmap != null) photo = Defaults.getStringImage(mBitmap);
                 // Posting params to register url
                 params = new HashMap<String, String>();
                 params.put("uid", uid);
                 params.put("name", name);
                 params.put("surname", surname);
-                params.put("photo", photo);
+                params.put("photo", "dgf");
                 params.put("history", history);
                 params.put("recommendations", recommendations);
                 params.put("birthday", birthday);
