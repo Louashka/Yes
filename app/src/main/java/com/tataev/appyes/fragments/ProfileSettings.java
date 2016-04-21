@@ -180,6 +180,9 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
             imageLogoSettings.setImageUrl(url, mImageLoader);
         }
 
+        imageLogoSettings.setDefaultImageResId(R.drawable.reg_logo);
+        imageLogoSettings.setErrorImageResId(R.drawable.reg_logo);
+
         if (birthday != null) {
             String year = birthday.split("-")[0];
             String month = birthday.split("-")[1];
@@ -445,14 +448,14 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
             @Override
             protected Map<String, String> getParams() {
                 //Converting Bitmap to String
-//                String photo = "";
-//                if (mBitmap != null) photo = Defaults.getStringImage(mBitmap);
+                String photo = "";
+                if (mBitmap != null) photo = Defaults.getStringImage(mBitmap);
                 // Posting params to register url
                 params = new HashMap<String, String>();
                 params.put("uid", uid);
                 params.put("name", name);
                 params.put("surname", surname);
-                params.put("photo", "dgf");
+                params.put("photo", photo);
                 params.put("history", history);
                 params.put("recommendations", recommendations);
                 params.put("birthday", birthday);
