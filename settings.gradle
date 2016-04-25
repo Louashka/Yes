@@ -1,2 +1,1 @@
-include ':app', ':pulltorefresh-and-loadmore'
-include ':yandexmapkitlibrary'
+include ':pulltorefresh-and-loadmore', ':app', ':yandexmapkitlibrary'

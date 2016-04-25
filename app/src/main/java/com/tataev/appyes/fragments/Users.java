@@ -66,13 +66,14 @@ public class Users extends Fragment implements View.OnClickListener{
     private LoadMoreListView loadMoreListView;
     private UsersAdapter usersAdapter;
     private ArrayList<UsersList> usersList = new ArrayList<UsersList>();
-    private ArrayList<UsersList> usersList1 = new ArrayList<UsersList>();
+    private ArrayList<UsersList> usersListJson = new ArrayList<UsersList>();
     private Bitmap bitmap;
     private ImageView imageRequest;
     private SearchView search_view_main;
     private Parcelable state;
     private static final String TAG = Users.class.getSimpleName();
     private Map<String, String> params;
+    private int k = 10;
     private ProgressDialog pDialog;
 
     // TODO: Rename and change types of parameters
@@ -126,13 +127,13 @@ public class Users extends Fragment implements View.OnClickListener{
 
         //Example data
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.users_logo_default);
-        usersList = getUsers(usersList);
+        getUsers();
+
 
         //Initialize request icon, search field and users ListView
         imageRequest = (ImageView)rootView.findViewById(R.id.imageRequest);
         exListView = (ExpandableListView) rootView.findViewById(R.id.exListView);
         loadMoreListView = (LoadMoreListView)rootView.findViewById(R.id.loadMoreListView);
-        usersList1.addAll(usersList);
 
         search_view_main = (SearchView)rootView.findViewById(R.id.searchViewUsers);
         search_view_main.setOnClickListener(this);
@@ -253,6 +254,7 @@ public class Users extends Fragment implements View.OnClickListener{
 
         @Override
         protected Void doInBackground(Void... params) {
+            int count;
 
             if (isCancelled()) {
                 return null;
@@ -264,21 +266,26 @@ public class Users extends Fragment implements View.OnClickListener{
             } catch (InterruptedException e) {
             }
 
-            for (int i = 0; i < usersList1.size(); i++)
-                usersList.add(usersList1.get(i));
+            if (k + 10 < usersListJson.size()) {
+                count = k + 10;
+            } else {
+                count = usersListJson.size();
+            }
+            for (int i = k; i < count; i++) {
+                usersList.add(usersListJson.get(i));
+            }
 
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            usersList.add(new UsersList(bitmap, "Added after load more", true));
-
             // We need notify the adapter that the data have been changed
             usersAdapter.notifyDataSetChanged();
 
             // Call onLoadMoreComplete when the LoadMore task, has finished
             loadMoreListView.onLoadMoreComplete();
+            k +=10;
 
             super.onPostExecute(result);
         }
@@ -290,7 +297,7 @@ public class Users extends Fragment implements View.OnClickListener{
         }
     }
 
-    private ArrayList<UsersList> getUsers(final ArrayList<UsersList> usersListJson) {
+    private ArrayList<UsersList> getUsers() {
         // Tag used to cancel the request
         String tag_string_req = "req_get_users";
 
@@ -310,8 +317,17 @@ public class Users extends Fragment implements View.OnClickListener{
                     if (jsonArray != null) {
                         for (int i = 0; i < jsonArray.length(); i++){
                             JSONObject jObj = jsonArray.getJSONObject(i);
-                            usersListJson.add(new UsersList(bitmap, jObj.getString("surname") + jObj.getString("name"), true));
+                            usersListJson.add(new UsersList(bitmap, jObj.getString("surname") + " " + jObj.getString("name"), true));
                         }
+                        if (usersListJson.size() > 10) {
+                            for (int i = 0; i < 10; i++) {
+                                usersList.add(usersListJson.get(i));
+                            }
+
+                        } else {
+                            usersList.addAll(usersListJson);
+                        }
+                        usersAdapter.notifyDataSetChanged();
 
                     } else {
 
@@ -319,6 +335,7 @@ public class Users extends Fragment implements View.OnClickListener{
                         // message
                         Toast.makeText(getActivity().getApplicationContext(),
                                 "error loading", Toast.LENGTH_LONG).show();
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -15,13 +15,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ */
+
+
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/load_more_footer"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/black" >
+    android:layout_height="wrap_content">
 
     <View
         android:id="@+id/top_line"
@@ -41,7 +42,9 @@
         android:padding="3dp"
         android:text="@string/load_more_post"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/dark_slate_gray" />
+        android:textColor="@color/dark_slate_gray" />
+
+
     -->
 
     <ProgressBar
@@ -54,4 +57,4 @@
         android:padding="3dp"
         android:visibility="gone" />
 
-</RelativeLayout><!-- From: file:/D:/Android/AndroidStudioProjects/YesGit/pulltorefresh-and-loadmore/res/layout/load_more_footer.xml -->
+</RelativeLayout><!-- From: file:/C:/Users/lou/AndroidStudioProjects/YesGit/pulltorefresh-and-loadmore/res/layout/load_more_footer.xml -->
