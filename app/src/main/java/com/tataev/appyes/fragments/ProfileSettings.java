@@ -37,6 +37,7 @@ import com.tataev.appyes.AppConfig;
 import com.tataev.appyes.AppController;
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.LruBitmapCache;
+import com.tataev.appyes.MySingleton;
 import com.tataev.appyes.R;
 import com.tataev.appyes.RoundImage;
 import com.tataev.appyes.helper.SQLiteHandlerUser;
@@ -72,12 +73,12 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
     private SQLiteHandlerUser db;
     private SessionManager session;
     private String uid;
+    private String login;
     private Fragment fragment;
     private Bitmap mBitmap;
     private Map<String, String> params;
     private Uri mImageCaptureUri;
-    ImageLoader mImageLoader;
-    RequestQueue mRequestQueue;
+    private ImageLoader mImageLoader;
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final int CROP_FROM_CAMERA = 2;
 
@@ -165,6 +166,7 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
         uid =  user.get("uid");
+        login = user.get("login");
         String name = user.get("name");
         String surname = user.get("surname");
         String birthday = user.get("birthday");
@@ -175,8 +177,7 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         String recommendations = user.get("recommendations");
         String url = user.get("photo");
         if (Patterns.WEB_URL.matcher(url).matches() == true){
-            ImageLoader mImageLoader = new ImageLoader(mRequestQueue, new LruBitmapCache(
-                    LruBitmapCache.getCacheSize(getActivity())));
+            mImageLoader = MySingleton.getInstance(getActivity()).getImageLoader();
             imageLogoSettings.setImageUrl(url, mImageLoader);
         }
 
@@ -453,6 +454,7 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
                 // Posting params to register url
                 params = new HashMap<String, String>();
                 params.put("uid", uid);
+                params.put("login", login);
                 params.put("name", name);
                 params.put("surname", surname);
                 params.put("photo", photo);

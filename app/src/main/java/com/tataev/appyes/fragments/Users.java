@@ -1,32 +1,52 @@
 package com.tataev.appyes.fragments;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.costum.android.widget.LoadMoreListView;
+import com.tataev.appyes.AppConfig;
+import com.tataev.appyes.AppController;
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
 import com.tataev.appyes.UsersList;
 import com.tataev.appyes.adapters.UsersAdapter;
 import com.tataev.appyes.adapters.UsersSearchAdapter;
+import com.tataev.appyes.helper.SQLiteHandlerUser;
+import com.tataev.appyes.helper.SessionManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,13 +63,17 @@ public class Users extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM2 = "param2";
     private ExpandableListView exListView;
     private UsersSearchAdapter usersSearchAdapter;
-    private ListView listViewUsers;
+    private LoadMoreListView loadMoreListView;
     private UsersAdapter usersAdapter;
     private ArrayList<UsersList> usersList = new ArrayList<UsersList>();
+    private ArrayList<UsersList> usersList1 = new ArrayList<UsersList>();
     private Bitmap bitmap;
     private ImageView imageRequest;
     private SearchView search_view_main;
     private Parcelable state;
+    private static final String TAG = Users.class.getSimpleName();
+    private Map<String, String> params;
+    private ProgressDialog pDialog;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -96,19 +120,19 @@ public class Users extends Fragment implements View.OnClickListener{
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Пользователи");
 
         Defaults.setSearchViewStyle(R.id.searchViewUsers, rootView, getActivity());
+        // Progress dialog
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setCancelable(false);
 
         //Example data
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.users_logo_default);
-        usersList.add(new UsersList(bitmap, "Khasbulat Designer", true));
-        usersList.add(new UsersList(bitmap, "Mikail Designer", false));
-        usersList.add(new UsersList(bitmap, "Khasbulat Designer", true));
-        usersList.add(new UsersList(bitmap, "Khasbulat Designer", false));
-        usersList.add(new UsersList(bitmap, "Khasbulat Designer", false));
+        usersList = getUsers(usersList);
 
         //Initialize request icon, search field and users ListView
         imageRequest = (ImageView)rootView.findViewById(R.id.imageRequest);
         exListView = (ExpandableListView) rootView.findViewById(R.id.exListView);
-        listViewUsers = (ListView)rootView.findViewById(R.id.listViewUsers);
+        loadMoreListView = (LoadMoreListView)rootView.findViewById(R.id.loadMoreListView);
+        usersList1.addAll(usersList);
 
         search_view_main = (SearchView)rootView.findViewById(R.id.searchViewUsers);
         search_view_main.setOnClickListener(this);
@@ -129,15 +153,15 @@ public class Users extends Fragment implements View.OnClickListener{
         exListView.setAdapter(usersSearchAdapter);
 
         usersAdapter = new UsersAdapter(getActivity(), usersList);
-        listViewUsers.setAdapter(usersAdapter);
-        listViewUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        loadMoreListView.setAdapter(usersAdapter);
+        loadMoreListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Удалить из списка друзей?")
                         .setCancelable(true)
                         .setPositiveButton("Да",
-                                new DialogInterface.OnClickListener(){
+                                new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
@@ -153,6 +177,14 @@ public class Users extends Fragment implements View.OnClickListener{
                 return false;
             }
         });
+
+        (loadMoreListView)
+                .setOnLoadMoreListener(new LoadMoreListView.OnLoadMoreListener() {
+                    public void onLoadMore() {
+                        // Do the work to load more items at the end of list here
+                        new LoadDataTask().execute();
+                    }
+                });
 
         return rootView;
     }
@@ -215,6 +247,109 @@ public class Users extends Fragment implements View.OnClickListener{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    private class LoadDataTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            if (isCancelled()) {
+                return null;
+            }
+
+            // Simulates a background task
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+
+            for (int i = 0; i < usersList1.size(); i++)
+                usersList.add(usersList1.get(i));
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            usersList.add(new UsersList(bitmap, "Added after load more", true));
+
+            // We need notify the adapter that the data have been changed
+            usersAdapter.notifyDataSetChanged();
+
+            // Call onLoadMoreComplete when the LoadMore task, has finished
+            loadMoreListView.onLoadMoreComplete();
+
+            super.onPostExecute(result);
+        }
+
+        @Override
+        protected void onCancelled() {
+            // Notify the loading more operation has finished
+            loadMoreListView.onLoadMoreComplete();
+        }
+    }
+
+    private ArrayList<UsersList> getUsers(final ArrayList<UsersList> usersListJson) {
+        // Tag used to cancel the request
+        String tag_string_req = "req_get_users";
+
+        pDialog.setMessage("Loading ...");
+        showDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                AppConfig.URL_GET_USERS, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Loading Response: " + response.toString());
+                hideDialog();
+
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    if (jsonArray != null) {
+                        for (int i = 0; i < jsonArray.length(); i++){
+                            JSONObject jObj = jsonArray.getJSONObject(i);
+                            usersListJson.add(new UsersList(bitmap, jObj.getString("surname") + jObj.getString("name"), true));
+                        }
+
+                    } else {
+
+                        // Error occurred in registration. Get the error
+                        // message
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "error loading", Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Loading Error: " + error.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        });
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+
+        return usersList;
+    }
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 
 }

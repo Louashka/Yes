@@ -13,5 +13,8 @@ public class AppConfig {
 
     // Server user update url
     public static String URL_UPDATE = "http://88.212.220.246/tataev.ru/public_html/android_api/update.php";
+
+    // Server get users url
+    public static String URL_GET_USERS = "http://88.212.220.246/tataev.ru/public_html/android_api/getUsers.php";
 }
 

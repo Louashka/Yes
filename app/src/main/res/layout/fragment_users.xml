@@ -38,10 +38,10 @@
         android:id="@+id/exListView"
         android:descendantFocusability="afterDescendants"/>
 
-    <ListView
+    <com.costum.android.widget.LoadMoreListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/listViewUsers"
+        android:id="@+id/loadMoreListView"
         android:layout_margin="10dp" />
 
 </LinearLayout>
