@@ -93,14 +93,14 @@ public class Requests extends Fragment implements View.OnClickListener{
 
         //Example data
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.users_logo_default);
-        requestsList.add(new UsersList(bitmap, "Khasbulat Designer", true));
-        requestsList.add(new UsersList(bitmap, "Alena Ermilaeva", true));
-        requestsList.add(new UsersList(bitmap, "Minkail Designer", true));
-        requestsList.add(new UsersList(bitmap, "Marc Lucberg", true));
-        requestsList.add(new UsersList(bitmap, "Khasbulat Designer", true));
-        requestsList.add(new UsersList(bitmap, "Alena Ermilaeva", true));
-        requestsList.add(new UsersList(bitmap, "Minkail Designer", true));
-        requestsList.add(new UsersList(bitmap, "Marc Lucberg", true));
+//        requestsList.add(new UsersList(bitmap, "Khasbulat Designer", true));
+//        requestsList.add(new UsersList(bitmap, "Alena Ermilaeva", true));
+//        requestsList.add(new UsersList(bitmap, "Minkail Designer", true));
+//        requestsList.add(new UsersList(bitmap, "Marc Lucberg", true));
+//        requestsList.add(new UsersList(bitmap, "Khasbulat Designer", true));
+//        requestsList.add(new UsersList(bitmap, "Alena Ermilaeva", true));
+//        requestsList.add(new UsersList(bitmap, "Minkail Designer", true));
+//        requestsList.add(new UsersList(bitmap, "Marc Lucberg", true));
 
         //Initialize request icon, search field and users ListView
         imageRequest2 = (ImageView)rootView.findViewById(R.id.imageRequest2);

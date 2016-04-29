@@ -9,12 +9,14 @@ public class UsersList {
 
     Bitmap userBitmap;
     String userName;
-    Boolean userStatus;
+    Boolean userHistory;
+    Boolean userRecommendations;
 
-    public UsersList (Bitmap userBitmap, String userName, Boolean userStatus) {
+    public UsersList (Bitmap userBitmap, String userName, Boolean userHistory, Boolean userRecommendations) {
         this.userBitmap = userBitmap;
         this.userName= userName;
-        this.userStatus = userStatus;
+        this.userHistory = userHistory;
+        this.userRecommendations = userRecommendations;
     }
 
     public Bitmap getUserBitmap (){
@@ -37,13 +39,23 @@ public class UsersList {
         this.userName = userName;
     }
 
-    public Boolean getUserStatus (){
+    public Boolean getUserHistory (){
 
-        return this.userStatus;
+        return this.userHistory;
     }
 
-    public void setUserStatus (Boolean userStatus){
+    public void setUserHistory (Boolean userHistory){
 
-        this.userStatus = userStatus;
+        this.userHistory = userHistory;
+    }
+
+    public Boolean getUserRecommendations (){
+
+        return this.userRecommendations;
+    }
+
+    public void setUserRecommendations (Boolean userRecommendations){
+
+        this.userRecommendations = userRecommendations;
     }
 }

@@ -127,8 +127,6 @@ public class Users extends Fragment implements View.OnClickListener{
 
         //Example data
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.users_logo_default);
-        getUsers();
-
 
         //Initialize request icon, search field and users ListView
         imageRequest = (ImageView)rootView.findViewById(R.id.imageRequest);
@@ -155,6 +153,9 @@ public class Users extends Fragment implements View.OnClickListener{
 
         usersAdapter = new UsersAdapter(getActivity(), usersList);
         loadMoreListView.setAdapter(usersAdapter);
+
+        getUsers();
+
         loadMoreListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -310,14 +311,26 @@ public class Users extends Fragment implements View.OnClickListener{
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Loading Response: " + response.toString());
-                hideDialog();
 
                 try {
                     JSONArray jsonArray = new JSONArray(response);
+                    Boolean history;
+                    Boolean recommendations;
                     if (jsonArray != null) {
                         for (int i = 0; i < jsonArray.length(); i++){
                             JSONObject jObj = jsonArray.getJSONObject(i);
-                            usersListJson.add(new UsersList(bitmap, jObj.getString("surname") + " " + jObj.getString("name"), true));
+                            if (jObj.getString("history").equals("1")) {
+                                history = true;
+                            } else {
+                                history = false;
+                            }
+                            if (jObj.getString("recommendations").equals("1")) {
+                                recommendations = true;
+                            } else {
+                                recommendations = false;
+                            }
+                            usersListJson.add(new UsersList(bitmap, jObj.getString("surname") + " " + jObj.getString("name"),
+                                    history,  recommendations));
                         }
                         if (usersListJson.size() > 10) {
                             for (int i = 0; i < 10; i++) {
@@ -340,6 +353,7 @@ public class Users extends Fragment implements View.OnClickListener{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                hideDialog();
 
             }
         }, new Response.ErrorListener() {
@@ -351,6 +365,7 @@ public class Users extends Fragment implements View.OnClickListener{
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 hideDialog();
             }
+
         });
 
         // Adding request to request queue

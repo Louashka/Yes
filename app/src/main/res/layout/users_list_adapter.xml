@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/usersLike"
         android:layout_toLeftOf="@+id/usersStatus"
+        android:layout_alignParentRight="true"
         android:src="@drawable/like"
         android:layout_centerVertical="true"
         android:adjustViewBounds="true"
@@ -48,5 +49,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         style="@style/RadioButtonAppTheme"
-        android:enabled="false" />
+        android:enabled="false"
+        android:visibility="gone" />
 </RelativeLayout>

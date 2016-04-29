@@ -65,7 +65,6 @@ public class RequestsAdapter extends BaseAdapter {
             holder.imageRequestAva.setImageDrawable(roundedImage);
         }
         holder.usersNameRequest.setText(requestsList.get(position).getUserName());
-        holder.usersStatusRequest.setChecked(requestsList.get(position).getUserStatus());
         return convertView;
     }
 

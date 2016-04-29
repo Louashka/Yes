@@ -19,7 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             android:id="@+id/imageRequest"
-            android:src="@drawable/request" />
+            android:src="@drawable/request"
+            android:visibility="gone" />
 
         <SearchView
             android:layout_width="match_parent"
