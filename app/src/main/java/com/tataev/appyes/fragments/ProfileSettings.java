@@ -39,6 +39,7 @@ import com.tataev.appyes.AppController;
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.LruBitmapCache;
 import com.tataev.appyes.MySingleton;
+import com.tataev.appyes.PhotoMultipartRequest;
 import com.tataev.appyes.R;
 import com.tataev.appyes.RoundImage;
 import com.tataev.appyes.helper.SQLiteHandlerUser;
@@ -47,6 +48,7 @@ import com.tataev.appyes.helper.SessionManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,11 +82,12 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
     private Map<String, String> params;
     private Uri mImageCaptureUri;
     private ImageLoader mImageLoader;
+    private File imageFile;
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final int CROP_FROM_CAMERA = 2;
 
     private OnFragmentInteractionListener mListener;
-    private NetworkImageView imageLogoSettings;
+    private ImageView imageLogoSettings;
     private EditText editNameSettings;
     private EditText editSurnameSettings;
     private EditText daySettings;
@@ -139,7 +142,7 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile_settings, container, false);
 
-        imageLogoSettings = (NetworkImageView)rootView.findViewById(R.id.imageLogoSettings);
+        imageLogoSettings = (ImageView)rootView.findViewById(R.id.imageLogoSettings);
         editNameSettings = (EditText)rootView.findViewById(R.id.editNameSettings);
         editSurnameSettings = (EditText)rootView.findViewById(R.id.editSurnameSettings);
         daySettings = (EditText)rootView.findViewById(R.id.daySettings);
@@ -153,6 +156,9 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         textCodeSettings = (TextView)rootView.findViewById(R.id.textCodeSettings);
         editCodeSettings = (EditText)rootView.findViewById(R.id.editCodeSettings);
         buttonSave = (Button)rootView.findViewById(R.id.buttonSave);
+
+//        imageLogoSettings.setDefaultImageResId(R.drawable.reg_logo);
+//        imageLogoSettings.setErrorImageResId(R.drawable.reg_logo);
 
         // Progress dialog
         pDialog = new ProgressDialog(getActivity());
@@ -177,30 +183,44 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         String history = user.get("history");
         String recommendations = user.get("recommendations");
         String url = user.get("photo");
-        if (Patterns.WEB_URL.matcher(url).matches() == true){
-            mImageLoader = MySingleton.getInstance(getActivity()).getImageLoader();
-            mImageLoader.get(url, new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    Bitmap bitmap = response.getBitmap();
-                    if (bitmap != null) {
-                        RoundImage roundedImage = new RoundImage(bitmap, 350, 350);
-                        imageLogoSettings.setImageDrawable(roundedImage);
-                    }
-                }
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e(TAG, "Logo Error: " + error.getMessage());
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            error.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
+        if (Patterns.WEB_URL.matcher(url).matches() == true){
+            // Retrieves an image specified by the URL, displays it in the UI.
+            ImageRequest request = new ImageRequest(url,
+                    new Response.Listener<Bitmap>() {
+                        @Override
+                        public void onResponse(Bitmap bitmap) {
+                            RoundImage roundedImage = new RoundImage(bitmap, 350, 350);
+                            imageLogoSettings.setImageDrawable(roundedImage);
+                        }
+                    }, 0, 0, null,
+                    new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                            imageLogoSettings.setImageResource(R.drawable.reg_logo);
+                        }
+                    });
+            // Access the RequestQueue through your singleton class.
+            MySingleton.getInstance(getActivity()).addToRequestQueue(request);
+//            mImageLoader = MySingleton.getInstance(getActivity()).getImageLoader();
+//            mImageLoader.get(url, new ImageLoader.ImageListener() {
+//                @Override
+//                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+//                    Bitmap bitmap = response.getBitmap();
+//                    if (bitmap != null) {
+//                        RoundImage roundedImage = new RoundImage(bitmap, 350, 350);
+//                        imageLogoSettings.setImageDrawable(roundedImage);
+//                    }
+//                }
+//
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                    Log.e(TAG, "Logo Error: " + error.getMessage());
+//                    Toast.makeText(getActivity().getApplicationContext(),
+//                            error.getMessage(), Toast.LENGTH_LONG).show();
+//                }
+//            });
 //            imageLogoSettings.setImageUrl(url, mImageLoader);
         }
-
-        imageLogoSettings.setDefaultImageResId(R.drawable.reg_logo);
-        imageLogoSettings.setErrorImageResId(R.drawable.reg_logo);
 
         if (birthday != null) {
             String year = birthday.split("-")[0];
@@ -239,14 +259,6 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         }
     }
 
-    private class getImageBitmap extends AsyncTask <Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            return null;
-        }
-    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -262,6 +274,7 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
                 if (extras != null) {
                     try {
                         mBitmap = extras.getParcelable("data");
+                        imageFile = Defaults.persistImage(getActivity(), mBitmap, login);
                         RoundImage roundedImage = new RoundImage(mBitmap, 350, 350);
                         imageLogoSettings.setImageDrawable(roundedImage);
                     } catch(Exception e){
@@ -443,6 +456,22 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
                         // Updating row in users table
                         db.updateUser(email, uid, name, surname, photo, birthday, gender, address, history,
                                 recommendations, created_at, updated_at);
+
+                        if (imageFile != null) {
+                            new PhotoMultipartRequest(photo, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getActivity().getApplicationContext(),
+                                                   error.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }, new Response.Listener() {
+                                @Override
+                                public void onResponse(Object response) {
+
+                                }
+                            }, imageFile);
+                        }
+
 
                         Toast.makeText(getActivity().getApplicationContext(), "User successfully updated!", Toast.LENGTH_LONG).show();
 

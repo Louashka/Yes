@@ -27,4 +27,19 @@ dependencies {
     compile 'com.android.support:support-v4:22.2.1'
     compile project(':pulltorefresh-and-loadmore')
     compile project(':yandexmapkitlibrary')
+    compile('org.apache.httpcomponents:httpmime:4.+') {
+        exclude module: "httpclient"
+    }
+    compile('org.apache.httpcomponents:httpcore:4.+') {
+        exclude module: "httpclient"
+    }
 }
+
+android {
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+}
+

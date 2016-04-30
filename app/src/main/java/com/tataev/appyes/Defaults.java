@@ -8,11 +8,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Random;
 
 /**
@@ -73,6 +77,22 @@ public class Defaults {
         byte[] imageBytes = baos.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
+    }
+
+    public static File persistImage(Context context, Bitmap bitmap, String name) {
+        File filesDir = context.getFilesDir();
+        File imageFile = new File(filesDir, name + ".png");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e(context.getClass().getSimpleName(), "Error writing bitmap", e);
+        }
+        return  imageFile;
     }
 
 }
