@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -178,7 +179,24 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         String url = user.get("photo");
         if (Patterns.WEB_URL.matcher(url).matches() == true){
             mImageLoader = MySingleton.getInstance(getActivity()).getImageLoader();
-            imageLogoSettings.setImageUrl(url, mImageLoader);
+            mImageLoader.get(url, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    Bitmap bitmap = response.getBitmap();
+                    if (bitmap != null) {
+                        RoundImage roundedImage = new RoundImage(bitmap, 350, 350);
+                        imageLogoSettings.setImageDrawable(roundedImage);
+                    }
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "Logo Error: " + error.getMessage());
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+//            imageLogoSettings.setImageUrl(url, mImageLoader);
         }
 
         imageLogoSettings.setDefaultImageResId(R.drawable.reg_logo);
@@ -218,6 +236,14 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    private class getImageBitmap extends AsyncTask <Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            return null;
         }
     }
 
