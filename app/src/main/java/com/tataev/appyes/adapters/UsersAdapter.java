@@ -66,16 +66,16 @@ public class UsersAdapter extends BaseAdapter {
             holder.imageUsersAva.setImageDrawable(roundedImage);
         }
         holder.usersName.setText(usersList.get(position).getUserName());
-//        if (usersList.get(position).getUserHistory()){
-//            holder.usersBasket.setImageResource(R.drawable.basket_ok);
-//        } else {
-//            holder.usersBasket.setImageResource(R.drawable.basket);
-//        }
-//        if (usersList.get(position).getUserRecommendations()){
-//            holder.usersLike.setImageResource(R.drawable.like_ok);
-//        } else {
-//            holder.usersBasket.setImageResource(R.drawable.basket);
-//        }
+        if (usersList.get(position).getUserHistory()){
+            holder.usersBasket.setImageResource(R.drawable.basket_ok);
+        } else {
+            holder.usersBasket.setImageResource(R.drawable.basket);
+        }
+        if (usersList.get(position).getUserRecommendations()){
+            holder.usersLike.setImageResource(R.drawable.like_ok);
+        } else {
+            holder.usersLike.setImageResource(R.drawable.basket);
+        }
         return convertView;
     }
 

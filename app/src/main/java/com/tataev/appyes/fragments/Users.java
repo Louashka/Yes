@@ -2,7 +2,6 @@ package com.tataev.appyes.fragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -17,10 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -29,6 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.costum.android.widget.LoadMoreListView;
+import com.costum.android.widget.PullAndLoadListView;
+import com.costum.android.widget.PullToRefreshListView;
 import com.tataev.appyes.AppConfig;
 import com.tataev.appyes.AppController;
 import com.tataev.appyes.Defaults;
@@ -45,6 +44,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,17 +65,21 @@ public class Users extends Fragment implements View.OnClickListener{
     private ExpandableListView exListView;
     private UsersSearchAdapter usersSearchAdapter;
     private LoadMoreListView loadMoreListView;
+    private PullAndLoadListView pullToRefreshListView;
     private UsersAdapter usersAdapter;
-    private ArrayList<UsersList> usersList = new ArrayList<UsersList>();
-    private ArrayList<UsersList> usersListJson = new ArrayList<UsersList>();
+    private Fragment fragment;
+    private ArrayList<UsersList> usersFriends = new ArrayList<UsersList>();
+    private ArrayList<UsersList> usersFriendsJson = new ArrayList<UsersList>();
     private Bitmap bitmap;
     private ImageView imageRequest;
     private SearchView search_view_main;
-    private Parcelable state;
     private static final String TAG = Users.class.getSimpleName();
     private Map<String, String> params;
     private int k = 10;
     private ProgressDialog pDialog;
+    private SQLiteHandlerUser db;
+    private SessionManager session;
+    private String uid;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -116,6 +121,8 @@ public class Users extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_users, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Пользователи");
@@ -125,6 +132,28 @@ public class Users extends Fragment implements View.OnClickListener{
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
 
+        // SQLite database handler
+        db = new SQLiteHandlerUser(getActivity().getApplicationContext());
+
+        // Session manager
+        session = new SessionManager(getActivity().getApplicationContext());
+
+        // Check if user is already logged in or not
+        if (!session.isLoggedIn()) {
+            Toast.makeText(getActivity().getApplicationContext(),
+                    "Вы не авторизованы!", Toast.LENGTH_LONG).show();
+            fragment = new Profile();
+            Defaults.replaceFragment(fragment, getActivity());
+        }
+
+        // Fetching user details from sqlite
+        HashMap<String, String> user = db.getUserDetails();
+        uid =  user.get("uid");
+
+        pDialog.setMessage("Loading ...");
+        showDialog();
+        getUsersFriends();
+
         //Example data
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.users_logo_default);
 
@@ -132,6 +161,7 @@ public class Users extends Fragment implements View.OnClickListener{
         imageRequest = (ImageView)rootView.findViewById(R.id.imageRequest);
         exListView = (ExpandableListView) rootView.findViewById(R.id.exListView);
         loadMoreListView = (LoadMoreListView)rootView.findViewById(R.id.loadMoreListView);
+        pullToRefreshListView = (PullAndLoadListView) rootView.findViewById(R.id.pullToRefreshListView);
 
         search_view_main = (SearchView)rootView.findViewById(R.id.searchViewUsers);
         search_view_main.setOnClickListener(this);
@@ -151,12 +181,10 @@ public class Users extends Fragment implements View.OnClickListener{
         usersSearchAdapter.hasStableIds();
         exListView.setAdapter(usersSearchAdapter);
 
-        usersAdapter = new UsersAdapter(getActivity(), usersList);
-        loadMoreListView.setAdapter(usersAdapter);
+        usersAdapter = new UsersAdapter(getActivity(), usersFriends);
+        pullToRefreshListView.setAdapter(usersAdapter);
 
-        getUsers();
-
-        loadMoreListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        pullToRefreshListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -179,6 +207,15 @@ public class Users extends Fragment implements View.OnClickListener{
                 return false;
             }
         });
+
+        (pullToRefreshListView)
+                .setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+
+                    public void onRefresh() {
+                        // Do work to refresh the list here.
+                        new PullToRefreshDataTask().execute();
+                    }
+                });
 
         (loadMoreListView)
                 .setOnLoadMoreListener(new LoadMoreListView.OnLoadMoreListener() {
@@ -251,6 +288,44 @@ public class Users extends Fragment implements View.OnClickListener{
         public void onFragmentInteraction(Uri uri);
     }
 
+    private class PullToRefreshDataTask extends AsyncTask<Void, Void, Void> {
+
+        private Map<String, String> parametres;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            if (isCancelled()) {
+                return null;
+            }
+            // Simulates a background task
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+            getUsersFriends();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            // We need notify the adapter that the data have been changed
+            usersAdapter.notifyDataSetChanged();
+
+            // Call onLoadMoreComplete when the LoadMore task, has finished
+            pullToRefreshListView.onRefreshComplete();
+
+            super.onPostExecute(result);
+        }
+
+        @Override
+        protected void onCancelled() {
+            // Notify the loading more operation has finished
+            pullToRefreshListView.onLoadMoreComplete();
+        }
+    }
+
     private class LoadDataTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -267,13 +342,13 @@ public class Users extends Fragment implements View.OnClickListener{
             } catch (InterruptedException e) {
             }
 
-            if (k + 10 < usersListJson.size()) {
+            if (k + 10 < usersFriendsJson.size()) {
                 count = k + 10;
             } else {
-                count = usersListJson.size();
+                count = usersFriendsJson.size();
             }
             for (int i = k; i < count; i++) {
-                usersList.add(usersListJson.get(i));
+                usersFriends.add(usersFriendsJson.get(i));
             }
 
             return null;
@@ -298,15 +373,12 @@ public class Users extends Fragment implements View.OnClickListener{
         }
     }
 
-    private ArrayList<UsersList> getUsers() {
+    private ArrayList<UsersList> getUsersFriends() {
         // Tag used to cancel the request
         String tag_string_req = "req_get_users";
 
-        pDialog.setMessage("Loading ...");
-        showDialog();
-
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                AppConfig.URL_GET_USERS, new Response.Listener<String>() {
+                AppConfig.URL_GET_FRIENDS, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -329,16 +401,16 @@ public class Users extends Fragment implements View.OnClickListener{
                             } else {
                                 recommendations = false;
                             }
-                            usersListJson.add(new UsersList(bitmap, jObj.getString("surname") + " " + jObj.getString("name"),
+                            usersFriendsJson.add(new UsersList(bitmap, jObj.getString("surname") + " " + jObj.getString("name"),
                                     history,  recommendations));
                         }
-                        if (usersListJson.size() > 10) {
+                        if (usersFriendsJson.size() > 10) {
                             for (int i = 0; i < 10; i++) {
-                                usersList.add(usersListJson.get(i));
+                                usersFriends.add(usersFriendsJson.get(i));
                             }
 
                         } else {
-                            usersList.addAll(usersListJson);
+                            usersFriends.addAll(usersFriendsJson);
                         }
                         usersAdapter.notifyDataSetChanged();
 
@@ -366,12 +438,22 @@ public class Users extends Fragment implements View.OnClickListener{
                 hideDialog();
             }
 
-        });
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                params = new HashMap<String, String>();
+                params.put("id_user", uid);
+
+                return params;
+            }
+
+        };
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
-        return usersList;
+        return usersFriends;
     }
 
     private void showDialog() {

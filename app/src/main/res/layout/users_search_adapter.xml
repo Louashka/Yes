@@ -102,16 +102,16 @@
         android:orientation="horizontal"
         android:layout_below="@+id/userAge">
 
-        <EditText
-            android:layout_width="70dp"
+        <Spinner
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:id="@+id/editTextAgeFrom"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             style="@style/EditTextAppTheme"
-            android:hint="@string/from"
             android:singleLine="true"
+            android:entries="@array/age_from"
             android:inputType="number" />
 
         <TextView
@@ -125,16 +125,16 @@
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical" />
 
-        <EditText
-            android:layout_width="70dp"
+        <Spinner
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:id="@+id/editTextAgeTo"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             style="@style/EditTextAppTheme"
-            android:hint="@string/to"
             android:singleLine="true"
+            android:entries="@array/age_to"
             android:inputType="number" />
 
     </LinearLayout>

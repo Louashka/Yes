@@ -23,7 +23,7 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
     private Context context;
     private LayoutInflater l_InflaterUA;
     private AppController userGlobalClass;
-    private int k = 0;
+    private int k;
     private int Countries[] = new int[]{
             R.array.city_default,
             R.array.city_armenia,
@@ -94,11 +94,12 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = l_InflaterUA.inflate(R.layout.users_search_adapter, null);
-            holder.editTextAgeFrom = (EditText)convertView.findViewById(R.id.editTextAgeFrom);
-            holder.editTextAgeTo = (EditText)convertView.findViewById(R.id.editTextAgeTo);
+            holder.editTextAgeFrom = (Spinner)convertView.findViewById(R.id.editTextAgeFrom);
+            holder.editTextAgeTo = (Spinner)convertView.findViewById(R.id.editTextAgeTo);
             holder.spinnerCountry = (Spinner)convertView.findViewById(R.id.spinnerCountry);
             holder.spinnerCity = (Spinner)convertView.findViewById(R.id.spinnerCity);
             holder.userGender = (RadioGroup)convertView.findViewById(R.id.user_gender);
+            holder.spinnerCity.setEnabled(false);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -112,28 +113,7 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        holder.spinnerCountry.setSelection(userGlobalClass.getSpinnerCountryItem());
-        holder.spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position != userGlobalClass.getSpinnerCountryItem()) k++;
-                userGlobalClass.setSpinnerCountryItem(position);
-                holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                        Countries[position], android.R.layout.simple_spinner_item));
-                if (k == 0){
-                    holder.spinnerCity.setSelection(userGlobalClass.getSpinnerCityItem());
-                } else {
-                    holder.spinnerCity.setSelection(0);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
-                        R.array.city_default, android.R.layout.simple_spinner_item));
-            }
-        });
-
+        holder.spinnerCity.setSelection(userGlobalClass.getSpinnerCityItem());
         holder.spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -144,8 +124,51 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        holder.editTextAgeFrom.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2)});
-        holder.editTextAgeTo.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2)});
+
+        holder.spinnerCountry.setSelection(userGlobalClass.getSpinnerCountryItem());
+        holder.spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                userGlobalClass.setSpinnerCountryItem(position);
+                holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
+                        Countries[position], android.R.layout.simple_spinner_item));
+                if (position != 0) {
+                    holder.spinnerCity.setEnabled(true);
+                } else {
+                    holder.spinnerCity.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        holder.editTextAgeFrom.setSelection(userGlobalClass.getAgeFrom());
+        holder.editTextAgeFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                userGlobalClass.setAgeFrom(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        holder.editTextAgeTo.setSelection(userGlobalClass.getAgeTo());
+        holder.editTextAgeTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                userGlobalClass.setAgeTo(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         return convertView;
     }
@@ -156,8 +179,8 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
     }
 
     static class ViewHolder {
-        private EditText editTextAgeFrom;
-        private EditText editTextAgeTo;
+        private Spinner editTextAgeFrom;
+        private Spinner editTextAgeTo;
         private Spinner spinnerCountry;
         private Spinner spinnerCity;
         private RadioGroup userGender;

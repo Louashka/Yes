@@ -89,6 +89,7 @@
     </string-array>
 
     <string-array name="city_azerbaijan">
+        <item>Выберите город</item>
         <item>Агдам</item>
         <item>Агдаш</item>
         <item>Агджабеди</item>
@@ -152,6 +153,7 @@
     </string-array>
 
     <string-array name="city_armenia">
+        <item>Выберите город</item>
         <item>Абовян</item>
         <item>Алаверди</item>
         <item>Алапарс</item>
@@ -228,6 +230,7 @@
     </string-array>
 
     <string-array name="city_byelorussia">
+        <item>Выберите город</item>
         <item>Бобруйск</item>
         <item>Барановичи</item>
         <item>Борисов</item>
@@ -343,6 +346,7 @@
     </string-array>
 
     <string-array name="city_kazakhstan">
+        <item>Выберите город</item>
         <item>Абай</item>
         <item>Акколь</item>
         <item>Аксай</item>
@@ -433,6 +437,7 @@
     </string-array>
 
     <string-array name="city_kyrgyzstan">
+        <item>Выберите город</item>
         <item>Айдаркен</item>
         <item>Балыкчы</item>
         <item>Баткен</item>
@@ -467,6 +472,7 @@
     </string-array>
 
     <string-array name="city_moldavia">
+        <item>Выберите город</item>
         <item>Бендеры</item>
         <item>Бессарабка</item>
         <item>Бируинца</item>
@@ -536,6 +542,7 @@
     </string-array>
 
     <string-array name="city_russia">
+        <item>Выберите город</item>
         <item>Абакан</item>
         <item>Альметьевск</item>
         <item>Ангарск</item>
@@ -1108,6 +1115,33 @@
         <item>Блейзеры, жакеты, костюмы(блейзеры и жакеты, жилеты, деловые костюмы, джинсовые жакеты и жилетки )</item>
     </string-array>
     <string name="title_activity_base">BaseActivity</string>
+    
+    <string-array name="age_from">
+        <item>От</item> <item>От 12</item> <item>От 13</item> <item>От 14</item> <item>От 15</item> <item>От 16</item> <item>От 17</item>
+        <item>От 18</item> <item>От 19</item> <item>От 20</item> <item>От 21</item> <item>От 22</item> <item>От 23</item> <item>От 24</item>
+        <item>От 25</item> <item>От 26</item> <item>От 27</item> <item>От 28</item> <item>От 29</item> <item>От 30</item> <item>От 31</item>
+        <item>От 32</item> <item>От 33</item> <item>От 34</item> <item>От 35</item> <item>От 36</item> <item>От 37</item> <item>От 38</item>
+        <item>От 39</item> <item>От 40</item> <item>От 41</item> <item>От 42</item> <item>От 43</item> <item>От 44</item> <item>От 45</item>
+        <item>От 46</item> <item>От 47</item> <item>От 48</item> <item>От 49</item> <item>От 50</item> <item>От 51</item> <item>От 52</item>
+        <item>От 53</item> <item>От 54</item> <item>От 55</item> <item>От 56</item> <item>От 57</item> <item>От 58</item> <item>От 59</item>
+        <item>От 60</item> <item>От 61</item> <item>От 62</item> <item>От 63</item> <item>От 64</item> <item>От 65</item> <item>От 66</item>
+        <item>От 67</item> <item>От 68</item> <item>От 69</item> <item>От 70</item> <item>От 71</item> <item>От 72</item> <item>От 73</item>
+        <item>От 74</item> <item>От 75</item> <item>От 76</item> <item>От 77</item> <item>От 78</item> <item>От 79</item> <item>От 80</item>
+    </string-array>
+
+    <string-array name="age_to">
+        <item>До</item> <item>До 12</item> <item>До 13</item> <item>До 14</item> <item>До 15</item> <item>До 16</item> <item>До 17</item>
+        <item>До 18</item> <item>До 19</item> <item>До 20</item> <item>До 21</item> <item>До 22</item> <item>До 23</item> <item>До 24</item>
+        <item>До 25</item> <item>До 26</item> <item>До 27</item> <item>До 28</item> <item>До 29</item> <item>До 30</item> <item>До 31</item>
+        <item>До 32</item> <item>До 33</item> <item>До 34</item> <item>До 35</item> <item>До 36</item> <item>До 37</item> <item>До 38</item>
+        <item>До 39</item> <item>До 40</item> <item>До 41</item> <item>До 42</item> <item>До 43</item> <item>До 44</item> <item>До 45</item>
+        <item>До 46</item> <item>До 47</item> <item>До 48</item> <item>До 49</item> <item>До 50</item> <item>До 51</item> <item>До 52</item>
+        <item>До 53</item> <item>До 54</item> <item>До 55</item> <item>До 56</item> <item>До 57</item> <item>До 58</item> <item>До 59</item>
+        <item>До 60</item> <item>До 61</item> <item>До 62</item> <item>До 63</item> <item>До 64</item> <item>До 65</item> <item>До 66</item>
+        <item>До 67</item> <item>До 68</item> <item>До 69</item> <item>До 70</item> <item>До 71</item> <item>До 72</item> <item>До 73</item>
+        <item>До 74</item> <item>До 75</item> <item>До 76</item> <item>До 77</item> <item>До 78</item> <item>До 79</item> <item>До 80</item>
+    </string-array>
+
 
 </resources>
 

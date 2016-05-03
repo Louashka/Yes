@@ -39,10 +39,17 @@
         android:id="@+id/exListView"
         android:descendantFocusability="afterDescendants"/>
 
+    <com.costum.android.widget.PullAndLoadListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pullToRefreshListView"
+        android:layout_margin="10dp" />
+
     <com.costum.android.widget.LoadMoreListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/loadMoreListView"
+        android:visibility="gone"
         android:layout_margin="10dp" />
 
 </LinearLayout>
