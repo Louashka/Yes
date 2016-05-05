@@ -22,5 +22,8 @@ public class AppConfig {
 
     // Server delete user friend url
     public static String URL_DELETE_FRIEND = "http://88.212.220.246/tataev.ru/public_html/android_api/deleteFriend.php";
+
+    // Server delete user friend url
+    public static String URL_ADD_FRIEND = "http://88.212.220.246/tataev.ru/public_html/android_api/setRequestsFriends.php";
 }
 

@@ -68,11 +68,14 @@ public class Users extends Fragment implements View.OnClickListener{
     private UsersSearchAdapter usersSearchAdapter;
     private LoadMoreListView loadMoreListView;
     private PullAndLoadListView pullToRefreshListView;
+    private UsersAdapter friendsAdapter;
     private UsersAdapter usersAdapter;
     private Fragment fragment;
     private ArrayList<UsersList> usersFriends = new ArrayList<UsersList>();
     private ArrayList<UsersList> friendsDB = new ArrayList<UsersList>();
     private ArrayList<UsersList> usersFriendsJson = new ArrayList<UsersList>();
+    private ArrayList<UsersList> allUsers = new ArrayList<UsersList>();
+    private ArrayList<UsersList> allUsersJson = new ArrayList<UsersList>();
     private Bitmap bitmap;
     private ImageView imageRequest;
     private SearchView search_view_main;
@@ -189,8 +192,21 @@ public class Users extends Fragment implements View.OnClickListener{
         usersSearchAdapter.hasStableIds();
         exListView.setAdapter(usersSearchAdapter);
 
-        usersAdapter = new UsersAdapter(getActivity(), usersFriends);
-        pullToRefreshListView.setAdapter(usersAdapter);
+        exListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+            @Override
+            public void onGroupCollapse(int groupPosition) {
+                pullToRefreshListView.setVisibility(View.GONE);
+                loadMoreListView.setVisibility(View.VISIBLE);
+                usersAdapter = new UsersAdapter(getActivity(), allUsers);
+                loadMoreListView.setAdapter(usersAdapter);
+                pDialog.setMessage("Loading ...");
+                showDialog();
+                getSearchedUsers();
+            }
+        });
+
+        friendsAdapter = new UsersAdapter(getActivity(), usersFriends);
+        pullToRefreshListView.setAdapter(friendsAdapter);
 
         pullToRefreshListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -231,11 +247,35 @@ public class Users extends Fragment implements View.OnClickListener{
                     }
                 });
 
+        loadMoreListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Добавить пользователя в друзья?")
+                        .setCancelable(true)
+                        .setPositiveButton("Да",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                })
+                        .setNegativeButton("Нет",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+                return false;
+            }
+        });
+
         (loadMoreListView)
                 .setOnLoadMoreListener(new LoadMoreListView.OnLoadMoreListener() {
                     public void onLoadMore() {
                         // Do the work to load more items at the end of list here
-                        new LoadDataTask().execute();
+                        new LoadAllUsersDataTask().execute();
                     }
                 });
 
@@ -325,7 +365,7 @@ public class Users extends Fragment implements View.OnClickListener{
         @Override
         protected void onPostExecute(Void result) {
             // We need notify the adapter that the data have been changed
-            usersAdapter.notifyDataSetChanged();
+            friendsAdapter.notifyDataSetChanged();
 
             // Call onLoadMoreComplete when the LoadMore task, has finished
             pullToRefreshListView.onRefreshComplete();
@@ -340,7 +380,7 @@ public class Users extends Fragment implements View.OnClickListener{
         }
     }
 
-    private class LoadDataTask extends AsyncTask<Void, Void, Void> {
+    private class LoadAllUsersDataTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -356,13 +396,13 @@ public class Users extends Fragment implements View.OnClickListener{
             } catch (InterruptedException e) {
             }
 
-            if (k + 10 < usersFriendsJson.size()) {
+            if (k + 10 < allUsersJson.size()) {
                 count = k + 10;
             } else {
-                count = usersFriendsJson.size();
+                count = allUsersJson.size();
             }
             for (int i = k; i < count; i++) {
-                usersFriends.add(usersFriendsJson.get(i));
+                allUsers.add(allUsersJson.get(i));
             }
 
             return null;
@@ -389,7 +429,7 @@ public class Users extends Fragment implements View.OnClickListener{
 
     private ArrayList<UsersList> getUsersFriends() {
         // Tag used to cancel the request
-        String tag_string_req = "req_get_users";
+        String tag_string_req = "req_get_friends";
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 AppConfig.URL_GET_FRIENDS, new Response.Listener<String>() {
@@ -432,7 +472,7 @@ public class Users extends Fragment implements View.OnClickListener{
                         }
 
                         usersFriends.addAll(usersFriendsJson);
-                        usersAdapter.notifyDataSetChanged();
+                        friendsAdapter.notifyDataSetChanged();
 
                     } else {
 
@@ -487,7 +527,7 @@ public class Users extends Fragment implements View.OnClickListener{
                 Log.d(TAG, "Loading Response: " + response.toString());
                 db.deleteFriendByLogin(login);
                 usersFriends.remove(position - 1);
-                usersAdapter.notifyDataSetChanged();
+                friendsAdapter.notifyDataSetChanged();
                 hideDialog();
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Пользователь удален из друзей", Toast.LENGTH_LONG).show();
@@ -517,6 +557,99 @@ public class Users extends Fragment implements View.OnClickListener{
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private ArrayList<UsersList> getSearchedUsers() {
+        // Tag used to cancel the request
+        String tag_string_req = "req_get_users";
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                AppConfig.URL_GET_USERS, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Loading Response: " + response.toString());
+
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    Boolean history;
+                    Boolean recommendations;
+                    if (jsonArray != null) {
+                        for (int i = 0; i < jsonArray.length(); i++){
+
+                            JSONObject jObj = jsonArray.getJSONObject(i);
+                            String unique_id = jObj.getString("id");
+                            String login = jObj.getString("login");
+                            String name = jObj.getString("name");
+                            String surname = jObj.getString("surname");
+                            String photo = jObj.getString("photo");
+                            Integer historyInt = jObj.getInt("history");
+                            Integer recommendationsInt = jObj.getInt("recommendations");
+
+                            if (historyInt == 1) {
+                                history = true;
+                            } else {
+                                history = false;
+                            }
+                            if (recommendationsInt == 1) {
+                                recommendations = true;
+                            } else {
+                                recommendations = false;
+                            }
+                            allUsersJson.add(new UsersList(unique_id, login, photo, surname + " " + name,
+                                    history,  recommendations));
+                        }
+
+                        if (allUsersJson.size() > 10) {
+                            for (int i = 0; i < 10; i++) {
+                                allUsers.add(allUsersJson.get(i));
+                            }
+                        } else {
+                            allUsers.addAll(allUsersJson);
+                        }
+
+                        usersAdapter.notifyDataSetChanged();
+
+                    } else {
+
+                        // Error occurred in registration. Get the error
+                        // message
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "error loading", Toast.LENGTH_LONG).show();
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                hideDialog();
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Loading Error: " + error.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                params = new HashMap<String, String>();
+                params.put("id_user", uid);
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+
+        return usersFriends;
     }
 
     private void showDialog() {
