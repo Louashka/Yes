@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -182,25 +184,34 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
         String email = user.get("email");
         String history = user.get("history");
         String recommendations = user.get("recommendations");
-        String url = user.get("photo");
+        String photo = user.get("photo");
 
-        if (Patterns.WEB_URL.matcher(url).matches() == true){
+        if (!photo.isEmpty()){
+            try {
+                byte[] decodedString = Base64.decode(photo, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                RoundImage roundedImage = new RoundImage(decodedByte, 350, 350);
+                imageLogoSettings.setImageDrawable(roundedImage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             // Retrieves an image specified by the URL, displays it in the UI.
-            ImageRequest request = new ImageRequest(url,
-                    new Response.Listener<Bitmap>() {
-                        @Override
-                        public void onResponse(Bitmap bitmap) {
-                            RoundImage roundedImage = new RoundImage(bitmap, 350, 350);
-                            imageLogoSettings.setImageDrawable(roundedImage);
-                        }
-                    }, 0, 0, null,
-                    new Response.ErrorListener() {
-                        public void onErrorResponse(VolleyError error) {
-                            imageLogoSettings.setImageResource(R.drawable.reg_logo);
-                        }
-                    });
-            // Access the RequestQueue through your singleton class.
-            MySingleton.getInstance(getActivity()).addToRequestQueue(request);
+//            ImageRequest request = new ImageRequest(url,
+//                    new Response.Listener<Bitmap>() {
+//                        @Override
+//                        public void onResponse(Bitmap bitmap) {
+//                            RoundImage roundedImage = new RoundImage(bitmap, 350, 350);
+//                            imageLogoSettings.setImageDrawable(roundedImage);
+//                        }
+//                    }, 0, 0, null,
+//                    new Response.ErrorListener() {
+//                        public void onErrorResponse(VolleyError error) {
+//                            imageLogoSettings.setImageResource(R.drawable.reg_logo);
+//                        }
+//                    });
+//            // Access the RequestQueue through your singleton class.
+//            MySingleton.getInstance(getActivity()).addToRequestQueue(request);
 //            mImageLoader = MySingleton.getInstance(getActivity()).getImageLoader();
 //            mImageLoader.get(url, new ImageLoader.ImageListener() {
 //                @Override
@@ -274,7 +285,7 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
                 if (extras != null) {
                     try {
                         mBitmap = extras.getParcelable("data");
-                        imageFile = Defaults.persistImage(getActivity(), mBitmap, login);
+//                        imageFile = Defaults.persistImage(getActivity(), mBitmap, login);
                         RoundImage roundedImage = new RoundImage(mBitmap, 350, 350);
                         imageLogoSettings.setImageDrawable(roundedImage);
                     } catch(Exception e){
@@ -456,22 +467,6 @@ public class ProfileSettings extends Fragment implements View.OnClickListener{
                         // Updating row in users table
                         db.updateUser(email, uid, name, surname, photo, birthday, gender, address, history,
                                 recommendations, created_at, updated_at);
-
-                        if (imageFile != null) {
-                            new PhotoMultipartRequest(photo, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(getActivity().getApplicationContext(),
-                                                   error.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }, new Response.Listener() {
-                                @Override
-                                public void onResponse(Object response) {
-
-                                }
-                            }, imageFile);
-                        }
-
 
                         Toast.makeText(getActivity().getApplicationContext(), "User successfully updated!", Toast.LENGTH_LONG).show();
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ import com.tataev.appyes.AppController;
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.MainActivity;
 import com.tataev.appyes.R;
+import com.tataev.appyes.RoundImage;
 import com.tataev.appyes.UsersList;
 import com.tataev.appyes.adapters.UsersAdapter;
 import com.tataev.appyes.adapters.UsersSearchAdapter;
@@ -69,6 +71,7 @@ public class Users extends Fragment implements View.OnClickListener{
     private UsersAdapter usersAdapter;
     private Fragment fragment;
     private ArrayList<UsersList> usersFriends = new ArrayList<UsersList>();
+    private ArrayList<UsersList> friendsDB = new ArrayList<UsersList>();
     private ArrayList<UsersList> usersFriendsJson = new ArrayList<UsersList>();
     private Bitmap bitmap;
     private ImageView imageRequest;
@@ -140,22 +143,27 @@ public class Users extends Fragment implements View.OnClickListener{
 
         // Check if user is already logged in or not
         if (!session.isLoggedIn()) {
+            db.deleteFriends();
             Toast.makeText(getActivity().getApplicationContext(),
                     "Вы не авторизованы!", Toast.LENGTH_LONG).show();
             fragment = new Profile();
             Defaults.replaceFragment(fragment, getActivity());
         }
 
+        // Fetching friends details from sqlite
+        friendsDB = db.getFriendDetails();
+
         // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
         uid =  user.get("uid");
 
-        pDialog.setMessage("Loading ...");
-        showDialog();
-        getUsersFriends();
-
-        //Example data
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.users_logo_default);
+        if(friendsDB.isEmpty()) {
+            pDialog.setMessage("Loading ...");
+            showDialog();
+            getUsersFriends();
+        } else {
+            usersFriends.addAll(friendsDB);
+        }
 
         //Initialize request icon, search field and users ListView
         imageRequest = (ImageView)rootView.findViewById(R.id.imageRequest);
@@ -186,7 +194,9 @@ public class Users extends Fragment implements View.OnClickListener{
 
         pullToRefreshListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final String userId = usersFriends.get(position - 1).getUserId();
+                final String userLogin = usersFriends.get(position - 1).getUserLogin();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Удалить из списка друзей?")
                         .setCancelable(true)
@@ -194,6 +204,8 @@ public class Users extends Fragment implements View.OnClickListener{
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
+                                        showDialog();
+                                        deleteFriend(userLogin, userId, position);
                                     }
                                 })
                         .setNegativeButton("Нет",
@@ -213,6 +225,8 @@ public class Users extends Fragment implements View.OnClickListener{
 
                     public void onRefresh() {
                         // Do work to refresh the list here.
+                        db.deleteFriends();
+                        usersFriends = new ArrayList<UsersList>();
                         new PullToRefreshDataTask().execute();
                     }
                 });
@@ -390,28 +404,34 @@ public class Users extends Fragment implements View.OnClickListener{
                     Boolean recommendations;
                     if (jsonArray != null) {
                         for (int i = 0; i < jsonArray.length(); i++){
+
                             JSONObject jObj = jsonArray.getJSONObject(i);
-                            if (jObj.getString("history").equals("1")) {
+                            String unique_id = jObj.getString("id");
+                            String login = jObj.getString("login");
+                            String name = jObj.getString("name");
+                            String surname = jObj.getString("surname");
+                            String photo = jObj.getString("photo");
+                            Integer historyInt = jObj.getInt("history");
+                            Integer recommendationsInt = jObj.getInt("recommendations");
+
+                            // Inserting row in users table
+                            db.addFriend(unique_id, login, name, surname, photo, historyInt, recommendationsInt);
+
+                            if (historyInt == 1) {
                                 history = true;
                             } else {
                                 history = false;
                             }
-                            if (jObj.getString("recommendations").equals("1")) {
+                            if (recommendationsInt == 1) {
                                 recommendations = true;
                             } else {
                                 recommendations = false;
                             }
-                            usersFriendsJson.add(new UsersList(bitmap, jObj.getString("surname") + " " + jObj.getString("name"),
+                            usersFriendsJson.add(new UsersList(unique_id, login, photo, surname + " " + name,
                                     history,  recommendations));
                         }
-                        if (usersFriendsJson.size() > 10) {
-                            for (int i = 0; i < 10; i++) {
-                                usersFriends.add(usersFriendsJson.get(i));
-                            }
 
-                        } else {
-                            usersFriends.addAll(usersFriendsJson);
-                        }
+                        usersFriends.addAll(usersFriendsJson);
                         usersAdapter.notifyDataSetChanged();
 
                     } else {
@@ -454,6 +474,49 @@ public class Users extends Fragment implements View.OnClickListener{
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
         return usersFriends;
+    }
+
+    private void deleteFriend (final String login, final String id_friend, final int position) {
+        String tag_string_req = "req_delete_friend";
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                AppConfig.URL_DELETE_FRIEND, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Loading Response: " + response.toString());
+                db.deleteFriendByLogin(login);
+                usersFriends.remove(position - 1);
+                usersAdapter.notifyDataSetChanged();
+                hideDialog();
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Пользователь удален из друзей", Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Loading Error: " + error.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                params = new HashMap<String, String>();
+                params.put("id_user", uid);
+                params.put("id_friend", id_friend);
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
     private void showDialog() {

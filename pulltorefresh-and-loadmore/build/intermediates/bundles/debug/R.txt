@@ -9,8 +9,7 @@ int id load_more_progressBar 0x7f060002
 int id pull_to_refresh_header 0x7f060003
 int id pull_to_refresh_image 0x7f060005
 int id pull_to_refresh_progress 0x7f060004
-int id pull_to_refresh_text 0x7f060006
-int id pull_to_refresh_updated_at 0x7f060007
+int id pull_to_refresh_updated_at 0x7f060006
 int id top_line 0x7f060001
 int layout load_more_footer 0x7f030000
 int layout pull_to_refresh_header 0x7f030001

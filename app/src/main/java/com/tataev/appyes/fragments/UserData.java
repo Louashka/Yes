@@ -1,17 +1,22 @@
 package com.tataev.appyes.fragments;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tataev.appyes.Defaults;
 import com.tataev.appyes.R;
+import com.tataev.appyes.RoundImage;
 import com.tataev.appyes.helper.SQLiteHandlerUser;
 import com.tataev.appyes.helper.SessionManager;
 
@@ -35,6 +40,7 @@ public class UserData extends Fragment implements View.OnClickListener{
     private SQLiteHandlerUser db;
     private SessionManager session;
     private Fragment fragment;
+    private ImageView imageUserDataLogo;
     private TextView editUserDataLogin;
     private TextView editUserDataEmail;
     private Button buttonSettings;
@@ -81,6 +87,7 @@ public class UserData extends Fragment implements View.OnClickListener{
         editUserDataEmail = (TextView)rootView.findViewById(R.id.editUserDataEmail);
         buttonSettings = (Button)rootView.findViewById(R.id.buttonSettings);
         buttonLogOut = (Button)rootView.findViewById(R.id.buttonLogOut);
+        imageUserDataLogo = (ImageView) rootView.findViewById(R.id.imageUserDataLogo);
 
         // SqLite database handler
         db = new SQLiteHandlerUser(getActivity().getApplicationContext());
@@ -91,10 +98,22 @@ public class UserData extends Fragment implements View.OnClickListener{
         HashMap<String, String> user = db.getUserDetails();
         String login = user.get("login");
         String email = user.get("email");
+        String photo = user.get("photo");
 
         // Displaying the user details on the screen
         editUserDataLogin.setText(login);
         editUserDataEmail.setText(email);
+        if (!photo.isEmpty()) {
+            try {
+                byte[] decodedString = Base64.decode(photo, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                RoundImage roundedImage = new RoundImage(decodedByte, 350, 350);
+                imageUserDataLogo.setImageDrawable(roundedImage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
 
         buttonSettings.setOnClickListener(this);
         buttonLogOut.setOnClickListener(this);

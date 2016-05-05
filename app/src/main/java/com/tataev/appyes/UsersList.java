@@ -1,32 +1,79 @@
 package com.tataev.appyes;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by louas_000 on 10.10.2015.
  */
-public class UsersList {
+public class UsersList implements Parcelable{
 
-    Bitmap userBitmap;
+    String userId;
+    String userLogin;
+    String userPhoto;
     String userName;
     Boolean userHistory;
     Boolean userRecommendations;
 
-    public UsersList (Bitmap userBitmap, String userName, Boolean userHistory, Boolean userRecommendations) {
-        this.userBitmap = userBitmap;
+    public UsersList (String userId, String userLogin, String userPhoto, String userName, Boolean userHistory, Boolean userRecommendations) {
+        this.userId = userId;
+        this.userLogin = userLogin;
+        this.userPhoto = userPhoto;
         this.userName= userName;
         this.userHistory = userHistory;
         this.userRecommendations = userRecommendations;
     }
 
-    public Bitmap getUserBitmap (){
-
-        return this.userBitmap;
+    protected UsersList(Parcel in) {
+        userId = in.readString();
+        userLogin = in.readString();
+        userPhoto = in.readString();
+        userName = in.readString();
+        userHistory = in.readByte() != 0;
+        userRecommendations = in.readByte() != 0;
     }
 
-    public void setUserBitmap (Bitmap userBitmap){
+    public static final Creator<UsersList> CREATOR = new Creator<UsersList>() {
+        @Override
+        public UsersList createFromParcel(Parcel in) {
+            return new UsersList(in);
+        }
 
-        this.userBitmap = userBitmap;
+        @Override
+        public UsersList[] newArray(int size) {
+            return new UsersList[size];
+        }
+    };
+
+    public String getUserId (){
+
+        return this.userId;
+    }
+
+    public void setUserId (String userId){
+
+        this.userId = userId;
+    }
+
+    public String getUserLogin (){
+
+        return this.userLogin;
+    }
+
+    public void setUserLogin (String userLogin){
+
+        this.userLogin = userLogin;
+    }
+
+    public String getUserPhoto (){
+
+        return this.userPhoto;
+    }
+
+    public void setUserPhoto (String userPhoto){
+
+        this.userPhoto = userPhoto;
     }
 
     public String getUserName (){
@@ -57,5 +104,19 @@ public class UsersList {
     public void setUserRecommendations (Boolean userRecommendations){
 
         this.userRecommendations = userRecommendations;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userId);
+        dest.writeString(userPhoto);
+        dest.writeString(userName);
+        dest.writeByte((byte) (userHistory ? 1 : 0));
+        dest.writeByte((byte) (userRecommendations ? 1 : 0));
     }
 }

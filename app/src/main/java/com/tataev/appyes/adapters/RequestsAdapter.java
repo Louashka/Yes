@@ -55,7 +55,7 @@ public class RequestsAdapter extends BaseAdapter {
             holder.imageRequestAva = (ImageView)convertView.findViewById(R.id.imageRequestAva);
             holder.usersNameRequest = (TextView)convertView.findViewById(R.id.usersNameRequest);
             holder.usersStatusRequest = (RadioButton)convertView.findViewById(R.id.usersStatusRequest);
-            roundedImage = new RoundImage(requestsList.get(position).getUserBitmap(), 180, 180);
+
             convertView.setTag(holder);
         }
         else {

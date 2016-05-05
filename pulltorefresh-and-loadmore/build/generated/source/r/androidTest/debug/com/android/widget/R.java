@@ -23,8 +23,7 @@ public final class R {
 		public static final int pull_to_refresh_header = 0x7f060003;
 		public static final int pull_to_refresh_image = 0x7f060005;
 		public static final int pull_to_refresh_progress = 0x7f060004;
-		public static final int pull_to_refresh_text = 0x7f060006;
-		public static final int pull_to_refresh_updated_at = 0x7f060007;
+		public static final int pull_to_refresh_updated_at = 0x7f060006;
 		public static final int top_line = 0x7f060001;
 	}
 	public static final class layout {

@@ -19,5 +19,8 @@ public class AppConfig {
 
     // Server get user friends url
     public static String URL_GET_FRIENDS = "http://88.212.220.246/tataev.ru/public_html/android_api/getFriends.php";
+
+    // Server delete user friend url
+    public static String URL_DELETE_FRIEND = "http://88.212.220.246/tataev.ru/public_html/android_api/deleteFriend.php";
 }
 

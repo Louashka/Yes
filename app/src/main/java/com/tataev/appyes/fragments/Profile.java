@@ -259,12 +259,7 @@ public class Profile extends Fragment implements View.OnClickListener{
                         JSONObject user = jObj.getJSONObject("user");
                         String login = user.getString("login");
                         String email = user.getString("email");
-                        String name = "";
-                        try {
-                            name = new String(user.getString("name").getBytes("windows-1251"), "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
+                        String name = user.getString("name");
                         String surname = user.getString("surname");
                         String photo = user.getString("photo");
                         String birthday = user.getString("birthday");
