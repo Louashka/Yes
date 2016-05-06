@@ -250,6 +250,7 @@ public class Users extends Fragment implements View.OnClickListener{
         loadMoreListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final String userId = usersFriends.get(position - 1).getUserId();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Добавить пользователя в друзья?")
                         .setCancelable(true)
@@ -257,6 +258,8 @@ public class Users extends Fragment implements View.OnClickListener{
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
+                                        showDialog();
+                                        addFriend(uid, userId);
                                     }
                                 })
                         .setNegativeButton("Нет",
@@ -650,6 +653,60 @@ public class Users extends Fragment implements View.OnClickListener{
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
         return usersFriends;
+    }
+
+    private void addFriend (final String id_sender, final String id_receiver) {
+
+        String tag_string_req = "req_add_friend";
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                AppConfig.URL_ADD_FRIEND, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Loading Response: " + response.toString());
+                hideDialog();
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    if (!error) {
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Запрос отправлен", Toast.LENGTH_LONG).show();
+                    } else {
+                        // Get the error message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Loading Error: " + error.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                params = new HashMap<String, String>();
+                params.put("id_sender", id_sender);
+                params.put("id_receiver", id_receiver);
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
     private void showDialog() {
