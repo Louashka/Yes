@@ -25,5 +25,14 @@ public class AppConfig {
 
     // Server delete user friend url
     public static String URL_ADD_FRIEND = "http://88.212.220.246/tataev.ru/public_html/android_api/setRequestsFriends.php";
+
+    // Server delete user friend url
+    public static String URL_GET_REQUEST = "http://88.212.220.246/tataev.ru/public_html/android_api/getRequestsFriends.php";
+
+    // Server accept request url
+    public static String URL_ACCEPT_REQUEST = "http://88.212.220.246/tataev.ru/public_html/android_api/acceptFriend.php";
+
+    // Server decline request url
+    public static String URL_DECLINE_REQUEST = "http://88.212.220.246/tataev.ru/public_html/android_api/deleteRequestFriend.php";
 }
 

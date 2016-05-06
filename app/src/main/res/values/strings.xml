@@ -68,6 +68,8 @@
     <string name="log_out">Выход</string>
     <string name="settings">Настройки</string>
     <string name="save">Сохранить</string>
+    <string name="accept_request">Запрос принят</string>
+    <string name="decline_request">Запрос отклонен</string>
 
     <string-array name="country_array">
         <item>Выберите страну</item>

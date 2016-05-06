@@ -76,6 +76,7 @@ public class Users extends Fragment implements View.OnClickListener{
     private ArrayList<UsersList> usersFriendsJson = new ArrayList<UsersList>();
     private ArrayList<UsersList> allUsers = new ArrayList<UsersList>();
     private ArrayList<UsersList> allUsersJson = new ArrayList<UsersList>();
+    private ArrayList<UsersList> requestFriend = new ArrayList<UsersList>();
     private Bitmap bitmap;
     private ImageView imageRequest;
     private SearchView search_view_main;
@@ -281,6 +282,83 @@ public class Users extends Fragment implements View.OnClickListener{
                         new LoadAllUsersDataTask().execute();
                     }
                 });
+
+        final String[] tag_string_req = {"req_get_request"};
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                AppConfig.URL_GET_REQUEST, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Loading Response: " + response.toString());
+
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    Boolean history;
+                    Boolean recommendations;
+                    if (jsonArray != null) {
+                        imageRequest.setVisibility(View.VISIBLE);
+                        for (int i = 0; i < jsonArray.length(); i++){
+
+                            JSONObject jObj = jsonArray.getJSONObject(i);
+                            String unique_id = jObj.getString("id");
+                            String login = jObj.getString("login");
+                            String name = jObj.getString("name");
+                            String surname = jObj.getString("surname");
+                            String photo = jObj.getString("photo");
+                            Integer historyInt = jObj.getInt("history");
+                            Integer recommendationsInt = jObj.getInt("recommendations");
+
+                            if (historyInt == 1) {
+                                history = true;
+                            } else {
+                                history = false;
+                            }
+                            if (recommendationsInt == 1) {
+                                recommendations = true;
+                            } else {
+                                recommendations = false;
+                            }
+                            requestFriend.add(new UsersList(unique_id, login, photo, surname + " " + name,
+                                    history,  recommendations));
+                        }
+
+                    } else {
+
+                        // Error occurred in registration. Get the error
+                        // message
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "error loading", Toast.LENGTH_LONG).show();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Loading Error: " + error.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                Map<String, String> param = new HashMap<String, String>();
+                param.put("id_receiver", uid);
+
+                return param;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req[0]);
 
         return rootView;
     }
