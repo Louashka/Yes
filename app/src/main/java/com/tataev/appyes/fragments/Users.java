@@ -212,8 +212,8 @@ public class Users extends Fragment implements View.OnClickListener{
         pullToRefreshListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                final String userId = usersFriends.get(position - 1).getUserId();
-                final String userLogin = usersFriends.get(position - 1).getUserLogin();
+                final String userId = usersFriends.get(position).getUserId();
+                final String userLogin = usersFriends.get(position).getUserLogin();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Удалить из списка друзей?")
                         .setCancelable(true)
@@ -251,7 +251,7 @@ public class Users extends Fragment implements View.OnClickListener{
         loadMoreListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final String userId = usersFriends.get(position - 1).getUserId();
+                final String userId = allUsers.get(position).getUserId();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Добавить пользователя в друзья?")
                         .setCancelable(true)
@@ -795,6 +795,19 @@ public class Users extends Fragment implements View.OnClickListener{
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        // This call on your list view to update rows
+        usersFriends = new ArrayList<UsersList>();
+        friendsDB = new ArrayList<UsersList>();
+        usersFriendsJson = new ArrayList<UsersList>();
+        allUsers = new ArrayList<UsersList>();
+        allUsersJson = new ArrayList<UsersList>();
+        requestFriend = new ArrayList<UsersList>();
     }
 
 }

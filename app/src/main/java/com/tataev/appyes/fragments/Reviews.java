@@ -302,4 +302,14 @@ public class Reviews extends Fragment implements View.OnClickListener{
         public void onFragmentInteraction(Uri uri);
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        // This call on your list view to update rows
+        objectFeaturesDraft = new ArrayList<String>();
+        objectSizeDraft = new ArrayList<String>();
+        RODraft = new ArrayList<ReviewsObject>();
+    }
+
 }

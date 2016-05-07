@@ -84,6 +84,7 @@ public class RequestsAdapter extends BaseAdapter {
             holder.usersAccept = (ImageView)convertView.findViewById(R.id.usersAccept);
             holder.requestDecline = (TextView)convertView.findViewById(R.id.requestDecline);
             holder.requestAccept = (TextView)convertView.findViewById(R.id.requestAccept);
+
             db = new SQLiteHandlerUser(context.getApplicationContext());
             pDialog = new ProgressDialog(context);
             pDialog.setCancelable(false);
@@ -104,6 +105,7 @@ public class RequestsAdapter extends BaseAdapter {
         }
 
 
+
         holder.usersNameRequest.setText(requestsList.get(position).getUserName());
         holder.usersDecline.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,10 +113,29 @@ public class RequestsAdapter extends BaseAdapter {
                 pDialog.setMessage("Loading ...");
                 showDialog();
                 boolean request = declineRequest(position);
-                if (request) {
-                    holder.requestDecline.setVisibility(View.GONE);
-                    holder.requestAccept.setVisibility(View.GONE);
-                    holder.usersDecline.setVisibility(View.VISIBLE);
+                if (!request) {
+                    hideDialog();
+                    holder.usersDecline.setVisibility(View.GONE);
+                    holder.usersAccept.setVisibility(View.GONE);
+                    holder.requestDecline.setVisibility(View.VISIBLE);
+                } else {
+                    hideDialog();
+                }
+            }
+        });
+        holder.usersAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pDialog.setMessage("Loading ...");
+                showDialog();
+                boolean request = acceptRequest(position);
+                if (!request) {
+                    hideDialog();
+                    holder.usersDecline.setVisibility(View.GONE);
+                    holder.usersAccept.setVisibility(View.GONE);
+                    holder.requestAccept.setVisibility(View.VISIBLE);
+                } else {
+                    hideDialog();
                 }
             }
         });
@@ -155,7 +176,6 @@ public class RequestsAdapter extends BaseAdapter {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                hideDialog();
             }
         }, new Response.ErrorListener() {
 
@@ -181,6 +201,66 @@ public class RequestsAdapter extends BaseAdapter {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
+        return error;
+    }
+
+    private Boolean acceptRequest(final int position) {
+        // Tag used to cancel the request
+        String tag_string_req = "req_accept_request";
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                AppConfig.URL_ACCEPT_REQUEST, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    error = jObj.getBoolean("error");
+                    if (!error) {
+                        Toast.makeText(context.getApplicationContext(),
+                                "Запрос принят", Toast.LENGTH_LONG).show();
+                        String unique_id = jObj.getString("id");
+                        String login = jObj.getString("login");
+                        String name = jObj.getString("name");
+                        String surname = jObj.getString("surname");
+                        String photo = jObj.getString("photo");
+                        Integer historyInt = jObj.getInt("history");
+                        Integer recommendationsInt = jObj.getInt("recommendations");
+
+                        // Inserting row in users table
+                        db.addFriend(unique_id, login, name, surname, photo, historyInt, recommendationsInt);
+                    } else {
+                        // Get the error message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(context.getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context.getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                params = new HashMap<String, String>();
+                params.put("id_sender", requestsList.get(position).getUserId());
+                params.put("id_receiver", id_receiver);
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
         return error;
     }
 

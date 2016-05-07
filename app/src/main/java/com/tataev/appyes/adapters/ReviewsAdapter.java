@@ -116,8 +116,13 @@ public class ReviewsAdapter extends BaseAdapter{
         sizes[5] = holder.sizeXXL;
         if (adapterList.get(position).getObjectSize() != null) {
             for (int i = 0; i < adapterList.get(position).getObjectSize().size(); i++) {
-                sizes[i].setText(adapterList.get(position).getObjectSize().get(i));
-                sizes[i].setVisibility(View.VISIBLE);
+                try {
+                    sizes[i].setText(adapterList.get(position).getObjectSize().get(i));
+                    sizes[i].setVisibility(View.VISIBLE);
+                } catch (ArrayIndexOutOfBoundsException e){
+                    e.printStackTrace();
+                }
+
             }
         }
         holder.noveltyPrice.setText(adapterList.get(position).getObjectPrice().toString() + " руб.");

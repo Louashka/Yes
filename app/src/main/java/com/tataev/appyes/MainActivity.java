@@ -2,6 +2,7 @@ package com.tataev.appyes;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -76,6 +77,13 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
+            case R.id.share:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Скачайте приложение Yes!");
+                intent.putExtra(Intent.EXTRA_TEXT, "\nСоветую использовать приложение YES\n http://www.tataev.com");
+                startActivity(Intent.createChooser(intent, "Share"));
+                break;
             case R.id.navigation:
                 menuFrag = new Nearby();
                 Defaults.replaceFragment(menuFrag, this);

@@ -176,6 +176,7 @@ public class UserData extends Fragment implements View.OnClickListener{
     private void logoutUser() {
         session.setLogin(false);
         db.deleteUsers();
+        db.deleteFriends();
 
         // Launching the login activity
         fragment = new Profile();
