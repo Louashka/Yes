@@ -1,6 +1,8 @@
 package com.tataev.appyes.fragments;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,9 +47,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,6 +93,12 @@ public class Users extends Fragment implements View.OnClickListener{
     private SQLiteHandlerUser db;
     private SessionManager session;
     private String uid;
+    private AppController userGlobalClass;
+    private String query_default = "SELECT * FROM users";
+    private String query_condition = "";
+    private Calendar dateFrom;
+    private Calendar dateTo;
+    private Format f;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -174,6 +186,11 @@ public class Users extends Fragment implements View.OnClickListener{
         exListView = (ExpandableListView) rootView.findViewById(R.id.exListView);
         loadMoreListView = (LoadMoreListView)rootView.findViewById(R.id.loadMoreListView);
         pullToRefreshListView = (PullAndLoadListView) rootView.findViewById(R.id.pullToRefreshListView);
+        userGlobalClass = (AppController)getActivity().getApplicationContext();
+        dateFrom = Calendar.getInstance();
+        dateTo= Calendar.getInstance();
+
+        f = new SimpleDateFormat("yyyy-MM-dd");
 
         search_view_main = (SearchView)rootView.findViewById(R.id.searchViewUsers);
         search_view_main.setOnClickListener(this);
@@ -200,9 +217,79 @@ public class Users extends Fragment implements View.OnClickListener{
                 loadMoreListView.setVisibility(View.VISIBLE);
                 usersAdapter = new UsersAdapter(getActivity(), allUsers);
                 loadMoreListView.setAdapter(usersAdapter);
+                allUsers.clear();
+                allUsersJson.clear();
+                usersAdapter.notifyDataSetChanged();
+                query_condition = "";
+                dateFrom.setTime(new Date());
+                dateTo.setTime(new Date());
+                if (userGlobalClass.getRadioGender() == R.id.radioButtonM) {
+                    query_condition += " WHERE gender = 'm'";
+                } else if (userGlobalClass.getRadioGender() == R.id.radioButtonF) {
+                    query_condition += " WHERE gender = 'f'";
+                } else {
+                    query_condition += " WHERE gender LIKE '%'";
+                }
+                if (userGlobalClass.getSpinnerCountryItem() != 0) {
+                    if (userGlobalClass.getSpinnerCityItem() != 0) {
+                        if (userGlobalClass.getCity() != null) {
+                            query_condition += " AND address LIKE '%" + userGlobalClass.getCity() + "%'";
+                        }
+                    } else if (userGlobalClass.getCountry() != null) {
+                        query_condition += " AND address LIKE '%" + userGlobalClass.getCountry() + "%'";
+                    }
+                } else {
+                    query_condition += " AND address LIKE '%'";
+                }
+                if (userGlobalClass.getAgeFrom() != 0 && userGlobalClass.getAgeTo() != 0) {
+                    dateFrom.add(Calendar.YEAR,-userGlobalClass.getAgeFrom()-11);
+                    dateTo.add(Calendar.YEAR,-userGlobalClass.getAgeTo()-11);
+                    query_condition += " AND birthday between '" + f.format(dateTo.getTime())
+                    + "' AND '" + f.format(dateFrom.getTime()) + "'";
+                } else {
+                    if (userGlobalClass.getAgeFrom() != 0) {
+                        dateFrom.add(Calendar.YEAR,-userGlobalClass.getAgeFrom()-11);
+                        query_condition += " AND birthday <= " + f.format(dateFrom.getTime()) ;
+                    }
+                    if (userGlobalClass.getAgeTo() != 0) {
+                        dateTo.add(Calendar.YEAR,-userGlobalClass.getAgeTo()-11);
+                        query_condition += " AND birthday >= " + f.format(dateTo.getTime());
+                    }
+                }
                 pDialog.setMessage("Loading ...");
                 showDialog();
                 getSearchedUsers();
+            }
+        });
+
+        //*** setOnQueryTextListener ***
+        search_view_main.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // TODO Auto-generated method stub
+
+                query_condition = " WHERE login LIKE '%" + query + "%'" + " OR name LIKE '%" + query + "%'"
+                        + " OR surname LIKE '%" + query + "%'";
+                pullToRefreshListView.setVisibility(View.GONE);
+                loadMoreListView.setVisibility(View.VISIBLE);
+                usersAdapter = new UsersAdapter(getActivity(), allUsers);
+                loadMoreListView.setAdapter(usersAdapter);
+                allUsers.clear();
+                allUsersJson.clear();
+                usersAdapter.notifyDataSetChanged();
+                pDialog.setMessage("Loading ...");
+                showDialog();
+                getSearchedUsers();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TODO Auto-generated method stub
+
+                return false;
             }
         });
 
@@ -720,7 +807,7 @@ public class Users extends Fragment implements View.OnClickListener{
             protected Map<String, String> getParams() {
                 // Posting params to register url
                 params = new HashMap<String, String>();
-                params.put("id_user", uid);
+                params.put("query", query_default + query_condition);
 
                 return params;
             }

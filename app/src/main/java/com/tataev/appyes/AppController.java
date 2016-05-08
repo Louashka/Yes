@@ -16,6 +16,8 @@ public class AppController extends Application {
     private int radioGender;
     private int ageFrom;
     private int ageTo;
+    private String country;
+    private String city;
     public static final String TAG = AppController.class.getSimpleName();
 
     private RequestQueue mRequestQueue;
@@ -89,6 +91,20 @@ public class AppController extends Application {
     }
     public void setAgeTo(int ageTo){
         this.ageTo = ageTo;
+    }
+
+    public String getCountry(){
+        return country;
+    }
+    public void setCountry(String country){
+        this.country = country;
+    }
+
+    public String getCity(){
+        return city;
+    }
+    public void setCity(String city){
+        this.city = city;
     }
 
 }

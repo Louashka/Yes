@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.tataev.appyes.fragments.MenuItems;
 import com.tataev.appyes.fragments.Nearby;
+import com.tataev.appyes.fragments.Users;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+
     }
 
     @Override

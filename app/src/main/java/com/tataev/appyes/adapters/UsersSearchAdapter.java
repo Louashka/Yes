@@ -15,6 +15,9 @@ import android.widget.Spinner;
 import com.tataev.appyes.AppController;
 import com.tataev.appyes.R;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by louas_000 on 10.10.2015.
  */
@@ -23,6 +26,7 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
     private Context context;
     private LayoutInflater l_InflaterUA;
     private AppController userGlobalClass;
+    private String[] value;
     private int k;
     private int Countries[] = new int[]{
             R.array.city_default,
@@ -117,7 +121,11 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
         holder.spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                userGlobalClass.setSpinnerCityItem(position);
+                if (position != 0) {
+                    userGlobalClass.setSpinnerCityItem(position);
+                    value = context.getResources().getStringArray(Countries[userGlobalClass.getSpinnerCountryItem()]);
+                    userGlobalClass.setCity(value[position]);
+                }
             }
 
             @Override
@@ -130,6 +138,7 @@ public class UsersSearchAdapter extends BaseExpandableListAdapter {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 userGlobalClass.setSpinnerCountryItem(position);
+                userGlobalClass.setCountry(holder.spinnerCountry.getSelectedItem().toString());
                 holder.spinnerCity.setAdapter(ArrayAdapter.createFromResource(context,
                         Countries[position], android.R.layout.simple_spinner_item));
                 if (position != 0) {

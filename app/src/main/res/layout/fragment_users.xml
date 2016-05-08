@@ -29,6 +29,7 @@
             android:id="@+id/searchViewUsers"
             android:searchIcon="@drawable/ic_search"
             android:voiceIcon="@drawable/ic_search_mic"
+            android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
             android:layout_gravity="center_vertical" />
 
     </TableRow>
